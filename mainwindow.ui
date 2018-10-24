@@ -1469,13 +1469,6 @@ font: 10pt &quot;Euclid&quot;</string>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QScrollBar" name="horizontalScrollBar">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
     </layout>
    </widget>
   </widget>
