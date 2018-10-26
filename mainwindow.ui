@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>672</width>
+    <width>420</width>
     <height>515</height>
    </rect>
   </property>
@@ -567,6 +567,7 @@ background-color:#838383;
 
 QPushButton:pressed{
 background-color:#383838;
+font-weight:bold;
 }
 
 QPushButton{
@@ -1428,16 +1429,17 @@ font-size:10pt;
      <font>
       <family>Euclid</family>
       <pointsize>20</pointsize>
-      <weight>50</weight>
+      <weight>75</weight>
       <italic>false</italic>
-      <bold>false</bold>
+      <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: white;
 color:black;
 border-radius:5px;
-font: 20pt &quot;Euclid&quot;</string>
+font: 20pt &quot;Euclid&quot;;
+font-weight:bold;</string>
     </property>
     <property name="tabStopDistance">
      <double>80.000000000000000</double>
