@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>420</width>
+    <width>392</width>
     <height>515</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>420</width>
+    <width>390</width>
     <height>515</height>
    </size>
   </property>
@@ -53,7 +53,7 @@ background-color:#333333;
      <rect>
       <x>10</x>
       <y>90</y>
-      <width>401</width>
+      <width>371</width>
       <height>101</height>
      </rect>
     </property>
@@ -68,7 +68,7 @@ background-color:#333333;
    <widget class="QPushButton" name="Bt_3">
     <property name="geometry">
      <rect>
-      <x>210</x>
+      <x>180</x>
       <y>390</y>
       <width>51</width>
       <height>51</height>
@@ -78,7 +78,10 @@ background-color:#333333;
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -101,7 +104,7 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_1">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>80</x>
       <y>390</y>
       <width>51</width>
       <height>51</height>
@@ -134,8 +137,8 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_lsh">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>200</y>
+      <x>30</x>
+      <y>250</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -167,14 +170,18 @@ font-size:10pt;
    <widget class="QPushButton" name="Bt_B">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>230</x>
       <y>340</y>
       <width>51</width>
       <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -197,10 +204,10 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_percent">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>440</y>
+      <x>330</x>
+      <y>250</y>
       <width>51</width>
-      <height>51</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="mouseTracking">
@@ -230,14 +237,18 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_E">
     <property name="geometry">
      <rect>
-      <x>310</x>
+      <x>280</x>
       <y>340</y>
       <width>51</width>
       <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -257,79 +268,13 @@ font-size:14pt;
      <string>E</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="Bt_oct">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>340</y>
-      <width>101</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="mouseTracking">
-     <bool>false</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
-background-color:#838383;
-}
-
-QPushButton:pressed{
-background-color:#383838;
-}
-
-QPushButton{
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 #464646, stop:1 #323232);
-border:1px solid white;
-border-radius: 5px;
-color:white;
-font-size:12pt;
-}</string>
-    </property>
-    <property name="text">
-     <string>Oct</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="Bt_bin">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>290</y>
-      <width>101</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="mouseTracking">
-     <bool>false</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
-background-color:#838383;
-}
-
-QPushButton:pressed{
-background-color:#383838;
-}
-
-QPushButton{
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 #464646, stop:1 #323232);
-border:1px solid white;
-border-radius: 5px;
-color:white;
-font-size:12pt;
-}</string>
-    </property>
-    <property name="text">
-     <string>Bin</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="Bt_backspace">
     <property name="geometry">
      <rect>
-      <x>260</x>
-      <y>240</y>
+      <x>230</x>
+      <y>250</y>
       <width>101</width>
-      <height>51</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -356,8 +301,8 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_plus">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>240</y>
+      <x>330</x>
+      <y>440</y>
       <width>51</width>
       <height>51</height>
      </rect>
@@ -389,7 +334,7 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_multiply">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>330</x>
       <y>340</y>
       <width>51</width>
       <height>51</height>
@@ -419,46 +364,13 @@ font-size:14pt;
      <string>x</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="Bt_hex">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>390</y>
-      <width>101</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="mouseTracking">
-     <bool>false</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
-background-color:#838383;
-}
-
-QPushButton:pressed{
-background-color:#383838;
-}
-
-QPushButton{
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 #464646, stop:1 #323232);
-border:1px solid white;
-border-radius: 5px;
-color:white;
-font-size:12pt;
-}</string>
-    </property>
-    <property name="text">
-     <string>Hex</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="Bt_clear">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>240</y>
+      <x>230</x>
+      <y>210</y>
       <width>51</width>
-      <height>51</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -485,8 +397,8 @@ font-size:10pt;
    <widget class="QPushButton" name="Bt_not">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>200</y>
+      <x>180</x>
+      <y>250</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -518,7 +430,7 @@ font-size:10pt;
    <widget class="QPushButton" name="Bt_2">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>130</x>
       <y>390</y>
       <width>51</width>
       <height>51</height>
@@ -528,7 +440,10 @@ font-size:10pt;
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -548,44 +463,10 @@ font-size:14pt;
      <string>2</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="Bt_dec">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>240</y>
-      <width>101</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="mouseTracking">
-     <bool>false</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
-background-color:#838383;
-}
-
-QPushButton:pressed{
-background-color:#383838;
-font-weight:bold;
-}
-
-QPushButton{
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 #464646, stop:1 #323232);
-border:1px solid white;
-border-radius: 5px;
-color:white;
-font-size:12pt;
-}</string>
-    </property>
-    <property name="text">
-     <string>Dec</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="Bt_9">
     <property name="geometry">
      <rect>
-      <x>210</x>
+      <x>180</x>
       <y>290</y>
       <width>51</width>
       <height>51</height>
@@ -595,7 +476,10 @@ font-size:12pt;
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -618,8 +502,8 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_rsh">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>200</y>
+      <x>80</x>
+      <y>250</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -651,7 +535,7 @@ font-size:10pt;
    <widget class="QPushButton" name="Bt_dot">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>80</x>
       <y>440</y>
       <width>51</width>
       <height>51</height>
@@ -661,7 +545,11 @@ font-size:10pt;
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -684,7 +572,7 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_6">
     <property name="geometry">
      <rect>
-      <x>210</x>
+      <x>180</x>
       <y>340</y>
       <width>51</width>
       <height>51</height>
@@ -694,7 +582,10 @@ font-size:14pt;
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -714,40 +605,10 @@ font-size:14pt;
      <string>6</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="Bt_close_brac">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>440</y>
-      <width>51</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
-background-color:#838383;
-}
-
-QPushButton:pressed{
-background-color:#383838;
-}
-
-QPushButton{
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 #464646, stop:1 #323232);
-border:1px solid white;
-border-radius: 5px;
-color:white;
-font-size:14pt;
-}</string>
-    </property>
-    <property name="text">
-     <string>)</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="Bt_minus">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>330</x>
       <y>290</y>
       <width>51</width>
       <height>51</height>
@@ -780,7 +641,7 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_7">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>80</x>
       <y>290</y>
       <width>51</width>
       <height>51</height>
@@ -790,7 +651,10 @@ font-size:14pt;
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -813,7 +677,7 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_0">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>130</x>
       <y>440</y>
       <width>51</width>
       <height>51</height>
@@ -846,8 +710,8 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_RoR">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>200</y>
+      <x>80</x>
+      <y>210</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -879,10 +743,10 @@ font-size:10pt;
    <widget class="QPushButton" name="Bt_mod">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>240</y>
+      <x>330</x>
+      <y>210</y>
       <width>51</width>
-      <height>51</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -909,7 +773,7 @@ font-size:10pt;
    <widget class="QPushButton" name="Bt_4">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>80</x>
       <y>340</y>
       <width>51</width>
       <height>51</height>
@@ -919,7 +783,11 @@ font-size:10pt;
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -942,14 +810,18 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_F">
     <property name="geometry">
      <rect>
-      <x>310</x>
+      <x>280</x>
       <y>390</y>
       <width>51</width>
       <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -972,7 +844,7 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_8">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>130</x>
       <y>290</y>
       <width>51</width>
       <height>51</height>
@@ -982,7 +854,10 @@ font-size:14pt;
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -1005,14 +880,18 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_D">
     <property name="geometry">
      <rect>
-      <x>310</x>
+      <x>280</x>
       <y>290</y>
       <width>51</width>
       <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -1035,7 +914,7 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_divide">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>330</x>
       <y>390</y>
       <width>51</width>
       <height>51</height>
@@ -1068,7 +947,7 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_plus_minus">
     <property name="geometry">
      <rect>
-      <x>210</x>
+      <x>180</x>
       <y>440</y>
       <width>51</width>
       <height>51</height>
@@ -1101,8 +980,8 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_or">
     <property name="geometry">
      <rect>
-      <x>260</x>
-      <y>200</y>
+      <x>180</x>
+      <y>210</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -1134,14 +1013,18 @@ font-size:10pt;
    <widget class="QPushButton" name="Bt_A">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>230</x>
       <y>290</y>
       <width>51</width>
       <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -1164,7 +1047,7 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_5">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>130</x>
       <y>340</y>
       <width>51</width>
       <height>51</height>
@@ -1174,7 +1057,10 @@ font-size:14pt;
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -1197,8 +1083,8 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_xor">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>200</y>
+      <x>130</x>
+      <y>250</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -1230,7 +1116,7 @@ font-size:10pt;
    <widget class="QPushButton" name="Bt_equals">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>230</x>
       <y>440</y>
       <width>101</width>
       <height>51</height>
@@ -1263,14 +1149,17 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_C">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>230</x>
       <y>390</y>
       <width>51</width>
       <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
+     <string notr="true">QPushButton:disabled{
+background-color:#bfbfbf;
+}
+QPushButton:hover{
 background-color:#838383;
 }
 
@@ -1293,8 +1182,8 @@ font-size:14pt;
    <widget class="QPushButton" name="Bt_RoL">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>200</y>
+      <x>30</x>
+      <y>210</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -1326,10 +1215,10 @@ font-size:10pt;
    <widget class="QPushButton" name="Bt_erase">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>240</y>
+      <x>280</x>
+      <y>210</y>
       <width>51</width>
-      <height>51</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -1353,41 +1242,11 @@ font-size:10pt;
      <string>CE</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="Bt_open_brac">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>440</y>
-      <width>51</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton:hover{
-background-color:#838383;
-}
-
-QPushButton:pressed{
-background-color:#383838;
-}
-
-QPushButton{
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,   stop:0 #464646, stop:1 #323232);
-border:1px solid white;
-border-radius: 5px;
-color:white;
-font-size:14pt;
-}</string>
-    </property>
-    <property name="text">
-     <string>(</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="Bt_and">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>200</y>
+      <x>130</x>
+      <y>210</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -1421,7 +1280,7 @@ font-size:10pt;
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>401</width>
+      <width>371</width>
       <height>61</height>
      </rect>
     </property>
@@ -1472,6 +1331,57 @@ font: 10pt &quot;Euclid&quot;</string>
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QRadioButton" name="RadBt_dec">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>290</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white;
+font-size:14pt;</string>
+    </property>
+    <property name="text">
+     <string>Dec</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="RadBt_hex">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>390</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white;
+font-size:14pt;</string>
+    </property>
+    <property name="text">
+     <string>Hex</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="RadBt_bin">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>340</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white;
+font-size:14pt;</string>
+    </property>
+    <property name="text">
+     <string>Bin</string>
+    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar">

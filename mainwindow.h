@@ -46,10 +46,9 @@ private slots:
     void on_Bt_equals_clicked();
     void on_Bt_percent();
     //base
-    void on_Bt_dec_clicked();
-    void on_Bt_bin_clicked();
-    void on_Bt_hex_clicked();
-    void on_Bt_oct_clicked();
+    void on_RadBt_dec_toggled(bool checked);
+    void on_RadBt_bin_toggled(bool checked);
+    void on_RadBt_hex_toggled(bool checked);
     //logical math
     void on_Bt_and_clicked();
     void on_Bt_or_clicked();
@@ -64,6 +63,10 @@ private slots:
     void on_Bt_erase_clicked();
     void on_Bt_clear_clicked();
     void on_Bt_backspace_clicked();
+
+    void EnableAtoF(bool enable);
+    void Enable2to9(bool enable);
+
 private:
     Ui::MainWindow *ui;
 };
