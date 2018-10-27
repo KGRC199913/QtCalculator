@@ -5,7 +5,7 @@ QInt::QInt()
 	this->low = this->high = 0;
 }
 
-QInt::QInt(long long & x)
+QInt::QInt(long long x)
 {
 	*this = QInt(std::to_string(x));
 }
@@ -41,25 +41,21 @@ QInt::QInt(std::string number)
 		saveBits(bits);
 }
 
+QInt::QInt(std::vector<bool> bits)
+{
+	if (bits.size() < 128)
+		bits.insert(bits.end(), 128 - bits.size(), false);
+	if (bits.size() > 128)
+		bits.erase(bits.end() - 1 - (bits.size() - 128));
+	this->saveBits(bits);
+}
+
 
 QInt::~QInt()
 {
 }
 
-void QInt::scanInput(std::istream & stream)
-{
-	std::string temp;
-	stream >> temp;
-
-	*this = QInt(temp);
-}
-
-void QInt::printOutput(std::ostream & stream)
-{
-	stream << this->to_string();
-}
-
-std::string QInt::to_string()
+std::string QInt::to_string() const
 {
 	long double tempNum;
 	std::string tempString;
@@ -86,7 +82,7 @@ std::string QInt::to_string()
 	return ans;
 }
 
-std::string QInt::to_binary_string()
+std::string QInt::to_binary_string() const
 {
 	std::string binary;
 	std::vector<bool> bits = getBitset();
@@ -98,7 +94,7 @@ std::string QInt::to_binary_string()
 	return binary;
 }
 
-std::string QInt::to_hex()
+std::string QInt::to_hex() const
 {
 	std::string hex;
 	std::string bin = this->to_binary_string();
@@ -156,6 +152,38 @@ std::string QInt::to_hex()
 
 	hex = "0x" + hex;
 	return hex;
+}
+
+QInt & QInt::rol(unsigned time)
+{
+	std::vector<bool> bits = this->getBitset();
+
+	bool temp = false;
+	while (time > 0) {
+		temp = bits[127];
+		bits.erase(bits.end() - 1);
+		bits.emplace(bits.begin(), temp);
+		--time;
+	}
+
+	this->saveBits(bits);
+	return *this;
+}
+
+QInt & QInt::ror(unsigned time)
+{
+	std::vector<bool> bits = this->getBitset();
+
+	bool temp = false;
+	while (time > 0) {
+		temp = bits[0];
+		bits.erase(bits.begin());
+		bits.emplace_back(temp);
+		--time;
+	}
+
+	this->saveBits(bits);
+	return *this;
 }
 
 std::string QInt::divideBy2(std::string & number)
@@ -432,6 +460,54 @@ std::string QInt::bigNumMinus(std::string & num1, std::string & num2)
 	return ans;
 }
 
+QInt & QInt::operator+=(const QInt & rhs)
+{
+	*this = *this + rhs;
+	return *this;
+}
+
+QInt & QInt::operator-=(const QInt & rhs)
+{
+	*this = *this - rhs;
+	return *this;
+}
+
+QInt & QInt::operator*=(const QInt & rhs)
+{
+	*this = *this * rhs;
+	return *this;
+}
+
+QInt & QInt::operator<<=(unsigned shift)
+{
+	*this = *this << shift;
+	return *this;
+}
+
+QInt & QInt::operator>>=(unsigned shift)
+{
+	*this = *this >> shift;
+	return *this;
+}
+
+QInt & QInt::operator&=(const QInt & rhs)
+{
+	*this = *this & rhs;
+	return *this;
+}
+
+QInt & QInt::operator|=(const QInt & rhs)
+{
+	*this = *this | rhs;
+	return *this;
+}
+
+QInt & QInt::operator^=(const QInt & rhs)
+{
+	*this = *this | rhs;
+	return *this;
+}
+
 std::vector<bool> QInt::getBitset() const
 {
 	std::vector<bool> bits(128);
@@ -506,4 +582,119 @@ QInt operator-(const QInt & lhs, const QInt & rhs)
 	rhs2sComplement.to2ndComplement();
 
 	return lhs + rhs2sComplement;
+}
+
+QInt operator*(const QInt & lhs, const QInt & rhs)
+{
+	std::vector<bool> rhsBits = rhs.getBitset();
+
+	QInt temp = lhs, ans;
+
+	for (int i = 0; i < 128; ++i) {
+		if (rhsBits[i]) {
+			ans += temp;
+		}
+		temp <<= 1;
+	}
+	
+	return ans;
+}
+
+QInt operator<<(const QInt & lhs, unsigned int shift)
+{
+	std::vector<bool> lhsBits = lhs.getBitset();
+	while (shift > 0) {
+		lhsBits.erase(lhsBits.end() - 1);
+		lhsBits.emplace(lhsBits.begin(), false);
+		--shift;
+	}
+
+	QInt result;
+	result.saveBits(lhsBits);
+	return result;
+
+}
+
+QInt operator>>(const QInt & lhs, unsigned int shift)
+{
+	std::vector<bool> lhsBits = lhs.getBitset();
+	bool isNegative = *(lhsBits.end() - 1);
+
+	while (shift > 0) {
+		lhsBits.erase(lhsBits.begin());
+		lhsBits.emplace_back(isNegative);
+		--shift;
+	}
+
+
+	QInt result;
+	result.saveBits(lhsBits);
+	return result;
+}
+
+QInt operator&(const QInt & lhs, const QInt & rhs)
+{
+	std::vector<bool> lhsBits = lhs.getBitset(), rhsBits = rhs.getBitset();
+	std::vector<bool> resultBits(128);
+
+	for (int i = 0; i < 128; ++i)
+		resultBits[i] = lhsBits[i] & rhsBits[i];
+
+	QInt result;
+	result.saveBits(resultBits);
+	return result;
+}
+
+QInt operator|(const QInt & lhs, const QInt & rhs)
+{
+	std::vector<bool> lhsBits = lhs.getBitset(), rhsBits = rhs.getBitset();
+	std::vector<bool> resultBits(128);
+
+	for (int i = 0; i < 128; ++i)
+		resultBits[i] = lhsBits[i] | rhsBits[i];
+
+	QInt result;
+	result.saveBits(resultBits);
+	return result;
+}
+
+QInt operator^(const QInt & lhs, const QInt & rhs)
+{
+	std::vector<bool> lhsBits = lhs.getBitset(), rhsBits = rhs.getBitset();
+	std::vector<bool> resultBits(128);
+
+	for (int i = 0; i < 128; ++i)
+		resultBits[i] = lhsBits[i] ^ rhsBits[i];
+
+	QInt result;
+	result.saveBits(resultBits);
+	return result;
+}
+
+QInt operator~(const QInt & lhs)
+{
+	std::vector<bool> lhsBits = lhs.getBitset();
+	std::vector<bool> resultBits(128);
+
+	for (int i = 0; i < 128; ++i)
+		resultBits[i] = ~lhsBits[i];
+
+	QInt result;
+	result.saveBits(resultBits);
+	return result;
+}
+
+std::istream& operator>>(std::istream & stream, QInt & rhs)
+{
+	std::string temp;
+	stream >> temp;
+
+	rhs = QInt(temp);
+	return stream;
+}
+
+std::ostream& operator<<(std::ostream & stream, const QInt & rhs)
+{
+	stream << rhs.to_binary_string();
+	return stream;
 }
