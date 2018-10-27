@@ -2,13 +2,14 @@
 #include "ui_mainwindow.h"
 
 QString value = "";
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+int dot_count = 0;
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
+    //setWindowFlags(Qt::Window | Qt::FramelessWindowHint |Qt::WindowCloseButtonHint);
     ui->setupUi(this);   
-    setMinimumSize(420,520);
+    setMinimumSize(390,520);
     setStyleSheet("QMainWindow{ background-color: #333333 }");
+
 }
 
 MainWindow::~MainWindow()
@@ -16,16 +17,37 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void AddToGroup(){
+void MainWindow::EnableAtoF(bool enable){
+    ui->Bt_A->setEnabled(enable);
+    ui->Bt_B->setEnabled(enable);
+    ui->Bt_C->setEnabled(enable);
+    ui->Bt_D->setEnabled(enable);
+    ui->Bt_E->setEnabled(enable);
+    ui->Bt_F->setEnabled(enable);
+}
 
+void MainWindow::Enable2to9(bool enable){
+    ui->Bt_2->setEnabled(enable);
+    ui->Bt_3->setEnabled(enable);
+    ui->Bt_4->setEnabled(enable);
+    ui->Bt_5->setEnabled(enable);
+    ui->Bt_6->setEnabled(enable);
+    ui->Bt_7->setEnabled(enable);
+    ui->Bt_8->setEnabled(enable);
+    ui->Bt_9->setEnabled(enable);
+    ui->Bt_dot->setEnabled(enable);
 }
 //Characters
 void MainWindow::on_Bt_digits_clicked(){
 
 }
 void MainWindow::on_Bt_0_clicked(){
+    if(value.length() == 0 && !ui->RadBt_bin->isChecked())
+        return;
+    else{
     value = value + "0";
     ui->Screen->setText(value);
+    }
 }
 void MainWindow::on_Bt_1_clicked()
 {
@@ -90,8 +112,13 @@ void MainWindow::on_Bt_F_clicked(){
     ui->Screen->setText(value);
 }
 void MainWindow::on_Bt_dot_clicked(){
+    if(dot_count == 1)
+        return;
+    if(value.length()== 0)
+        value = value + "0";
     value = value + ".";
     ui->Screen->setText(value);
+    dot_count = 1;
 }
 //math operations
 void MainWindow::on_Bt_plus_clicked(){
@@ -116,17 +143,18 @@ void MainWindow::on_Bt_percent(){
 
 }
 //base
-void MainWindow::on_Bt_dec_clicked(){
-
+void MainWindow::on_RadBt_dec_toggled(bool checked)
+{
+    EnableAtoF(!checked);
 }
-void MainWindow::on_Bt_bin_clicked(){
-
+void MainWindow::on_RadBt_bin_toggled(bool checked)
+{
+    EnableAtoF(!checked);
+    Enable2to9(!checked);
 }
-void MainWindow::on_Bt_hex_clicked(){
-
-}
-void MainWindow::on_Bt_oct_clicked(){
-
+void MainWindow::on_RadBt_hex_toggled(bool checked)
+{
+    EnableAtoF(checked);
 }
 //logical math
 void MainWindow::on_Bt_and_clicked(){
@@ -173,3 +201,4 @@ void MainWindow::on_Bt_backspace_clicked(){
     value.remove(value.length()-1, 1);
     ui->Screen->setText(value);
 }
+
