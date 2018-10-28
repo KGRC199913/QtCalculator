@@ -2,7 +2,7 @@
 
 QInt::QInt()
 {
-	this->low = this->high = 0;
+	this->m_low = this->m_high = 0;
 }
 
 QInt::QInt(long long x)
@@ -12,15 +12,26 @@ QInt::QInt(long long x)
 
 QInt::QInt(std::string number)
 {
-	this->low = this->high = 0;
 	bool isNegative = false;
 	if (number[0] == '-') {
 		number[0] = '0';
 		isNegative = true;
 	}
+	auto not0pos = number.find_first_not_of('0');
+	if (not0pos != std::string::npos)
+		number.erase(0, not0pos);
+	else 
+		number = "";
 
+	if (number.length() > 128)
+		throw new std::out_of_range("Number too long");
+
+	this->m_low = this->m_high = 0;
+	if (number.length() == 0)
+		return;
+	
 	if (!isAllDigits(number))
-		throw new std::exception("NaN");
+		throw new std::invalid_argument("NaN");
 
 	std::vector<bool> bits(128);
 
@@ -57,6 +68,8 @@ QInt::~QInt()
 
 std::string QInt::to_string() const
 {
+	if (this->m_high == 0 && this->m_low == 0)
+		return "0";
 	long double tempNum;
 	std::string tempString;
 	std::string ans;
@@ -195,7 +208,7 @@ std::string QInt::divideBy2(std::string & number)
 		number.erase(0, not0pos);
 
 	int currDivideNumber = 0;
-	for (int i = 0; i < number.length(); ++i) {
+	for (size_t i = 0; i < number.length(); ++i) {
 		currDivideNumber = currDivideNumber * 10 + (number[i] - '0');
 		ans += (currDivideNumber / 2) + '0';
 		currDivideNumber &= 1;
@@ -280,7 +293,7 @@ std::string QInt::bigNumMultiply(std::string & num1, std::string num2)
 	}
 
 	std::string ans = "";
-	for (int i = 0; i < result.size(); ++i) {
+	for (size_t i = 0; i < result.size(); ++i) {
 		ans = std::to_string(result[i]) + ans;
 	}
 
@@ -304,7 +317,7 @@ std::string QInt::bigNumAdd(std::string & num1, std::string & num2)
 	if ((num1[0] == '-') && (num2[0] == '-')) {
 		num1[0] = '0';
 		num2[0] = '0';
-		isNegative = ~isNegative;
+		isNegative = !isNegative;
 	}
 	else {
 		if (num1[0] == '-') {
@@ -408,7 +421,7 @@ std::string QInt::bigNumMinus(std::string & num1, std::string & num2)
 	}()) {
 		std::swap(num1, num2);
 		std::swap(n1, n2);
-		isNegative = ~isNegative;
+		isNegative = !isNegative;
 	}
 		
 
@@ -460,6 +473,11 @@ std::string QInt::bigNumMinus(std::string & num1, std::string & num2)
 	return ans;
 }
 
+QInt::operator bool() const
+{
+	return (this->m_high == 0 && this->m_low == 0);
+}
+
 QInt & QInt::operator+=(const QInt & rhs)
 {
 	*this = *this + rhs;
@@ -475,6 +493,12 @@ QInt & QInt::operator-=(const QInt & rhs)
 QInt & QInt::operator*=(const QInt & rhs)
 {
 	*this = *this * rhs;
+	return *this;
+}
+
+QInt & QInt::operator/=(const QInt & rhs)
+{
+	*this = *this / rhs;
 	return *this;
 }
 
@@ -511,14 +535,14 @@ QInt & QInt::operator^=(const QInt & rhs)
 std::vector<bool> QInt::getBitset() const
 {
 	std::vector<bool> bits(128);
-	int64_t temp = this->low;
+	int64_t temp = this->m_low;
 
 	for (int i = 0; i < 64; ++i) {
 		bits[i] = (temp & 1);
 		temp >>= 1;
 	}
 
-	temp = this->high;
+	temp = this->m_high;
 	for (int i = 64; i < 128; ++i) {
 		bits[i] = (temp & 1);
 		temp >>= 1;
@@ -530,13 +554,13 @@ std::vector<bool> QInt::getBitset() const
 void QInt::saveBits(std::vector<bool> &bits)
 {
 	for (int i = 63; i >=0; --i) {
-		this->low <<= 1;
-		this->low |= bits[i];
+		this->m_low <<= 1;
+		this->m_low |= bits[i];
 	}
 	
 	for (int i = 127; i >= 64; --i) {
-		this->high <<= 1;
-		this->high |= bits[i];
+		this->m_high <<= 1;
+		this->m_high |= bits[i];
 	}
 }
 
@@ -554,6 +578,11 @@ void QInt::to2ndComplement()
 	}
 
 	saveBits(bits);
+}
+
+bool QInt::isNegative() const
+{
+	return (this->m_high < 0);
 }
 
 QInt operator+(const QInt & lhs, const QInt & rhs)
@@ -598,6 +627,26 @@ QInt operator*(const QInt & lhs, const QInt & rhs)
 	}
 	
 	return ans;
+}
+
+QInt operator/(const QInt & lhs, const QInt & rhs)
+{
+	QInt diviend = lhs, divisor = rhs;
+
+	bool isNegative = lhs.isNegative() ^ rhs.isNegative();
+	if (!divisor.isNegative())
+		divisor.to2ndComplement();
+
+	QInt quotient, remainder = lhs;
+	do {
+		remainder += divisor;
+		quotient += 1;
+	} 
+	while (!remainder && !remainder.isNegative()); // FIXME: add comparasion to simplize this
+
+	if (isNegative)
+		quotient.to2ndComplement();
+	return quotient;
 }
 
 QInt operator<<(const QInt & lhs, unsigned int shift)
@@ -677,7 +726,7 @@ QInt operator~(const QInt & lhs)
 	std::vector<bool> resultBits(128);
 
 	for (int i = 0; i < 128; ++i)
-		resultBits[i] = ~lhsBits[i];
+		resultBits[i] = !lhsBits[i];
 
 	QInt result;
 	result.saveBits(resultBits);
@@ -695,6 +744,6 @@ std::istream& operator>>(std::istream & stream, QInt & rhs)
 
 std::ostream& operator<<(std::ostream & stream, const QInt & rhs)
 {
-	stream << rhs.to_binary_string();
+	stream << rhs.to_string();
 	return stream;
 }
