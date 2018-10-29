@@ -1,14 +1,17 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-QString value = "";
-int dot_count = 0;
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     //setWindowFlags(Qt::Window | Qt::FramelessWindowHint |Qt::WindowCloseButtonHint);
     ui->setupUi(this);   
     setMinimumSize(390,520);
     setStyleSheet("QMainWindow{ background-color: #333333 }");
+    GroupDigitButtons();
+    GroupCharButtons();
+    GroupMathButton();
+    on_RadBt_dec_toggled(true);
+    ConvertToPostfix();
 
 }
 
@@ -37,107 +40,126 @@ void MainWindow::Enable2to9(bool enable){
     ui->Bt_9->setEnabled(enable);
     ui->Bt_dot->setEnabled(enable);
 }
-//Characters
-void MainWindow::on_Bt_digits_clicked(){
+
+int MainWindow::OperPriority(QString op){
+    if(op == "x" || op == "÷")
+        return 3;
+    else if(op == "+" || op == "-")
+        return 1;
+    return 0;
+}
+bool MainWindow::isOperator(QString op){
+    return OperPriority(op);
+}
+
+void MainWindow::ConvertToPostfix(){
+    QStack <QString> ExpStack;
+    std::vector<QString> number;
+    for(auto iter = Exp.begin(); iter != Exp.end(); ++iter){
+        if(isOperator(*iter)){
+            number.emplace_back(*iter);
+        } else if(*iter == '('){
+            ExpStack.push(*iter);
+        } else if(*iter == ')'){
+            while(!ExpStack.empty() && ExpStack.top() != '('){
+                number.emplace_back(ExpStack.pop());
+            }
+            if(!ExpStack.empty())
+                throw new std::logic_error("wrong syntax");
+        }
+    }
 
 }
-void MainWindow::on_Bt_0_clicked(){
-    if(value.length() == 0 && !ui->RadBt_bin->isChecked())
-        return;
-    else{
-    value = value + "0";
-    ui->Screen->setText(value);
+
+//Characters 
+void MainWindow::GroupDigitButtons(){
+    QPushButton *DigitButton[10];
+    for(int i = 0; i<10;i++){
+        QString ButtonName = "Bt_" + QString::number(i);
+        DigitButton[i] = MainWindow::findChild<QPushButton*>(ButtonName);
+        connect(DigitButton[i], SIGNAL(clicked()), this, SLOT(Bt_digits_clicked()));
     }
 }
-void MainWindow::on_Bt_1_clicked()
+
+void MainWindow::GroupCharButtons()
 {
-    value = value + "1";
-    ui->Screen->setText(value);
+    connect(ui->Bt_A, SIGNAL(clicked()),this,SLOT(Bt_chars_clicked()));
+    connect(ui->Bt_B, SIGNAL(clicked()),this,SLOT(Bt_chars_clicked()));
+    connect(ui->Bt_C, SIGNAL(clicked()),this,SLOT(Bt_chars_clicked()));
+    connect(ui->Bt_D, SIGNAL(clicked()),this,SLOT(Bt_chars_clicked()));
+    connect(ui->Bt_E, SIGNAL(clicked()),this,SLOT(Bt_chars_clicked()));
+    connect(ui->Bt_F, SIGNAL(clicked()),this,SLOT(Bt_chars_clicked()));
 }
-void MainWindow::on_Bt_2_clicked()
-{
-    value = value + "2";
-    ui->Screen->setText(value);
+
+void MainWindow::Bt_chars_clicked(){
+    QPushButton *button = static_cast<QPushButton *>(sender());
+    display_val = display_val + button->text();
+    ui->Screen->setText(display_val);
 }
-void MainWindow::on_Bt_3_clicked(){
-    value = value + "3";
-    ui->Screen->setText(value);
+
+void MainWindow::Bt_digits_clicked(){
+    QPushButton *button = static_cast<QPushButton *>(sender());
+    if(display_val.toDouble() < DBL_EPSILON && display_val.length() < 2 && !ui->RadBt_bin->isChecked())
+    {
+        ui->Screen->setText(button->text());
+        display_val = button->text();
+    }
+    else{
+        display_val = display_val + button->text();
+        ui->Screen->setText(display_val);
+    }
 }
-void MainWindow::on_Bt_4_clicked(){
-    value = value + "4";
-    ui->Screen->setText(value);
-}
-void MainWindow::on_Bt_5_clicked(){
-    value = value + "5";
-    ui->Screen->setText(value);
-}
-void MainWindow::on_Bt_6_clicked(){
-    value = value + "6";
-    ui->Screen->setText(value);
-}
-void MainWindow::on_Bt_7_clicked(){
-    value = value + "7";
-    ui->Screen->setText(value);
-}
-void MainWindow::on_Bt_8_clicked(){
-    value = value + "8";
-    ui->Screen->setText(value);
-}
-void MainWindow::on_Bt_9_clicked(){
-    value = value + "9";
-    ui->Screen->setText(value);
-}
-void MainWindow::on_Bt_A_clicked(){
-    value = value + "A";
-    ui->Screen->setText(value);
-}
-void MainWindow::on_Bt_B_clicked(){
-    value = value + "B";
-    ui->Screen->setText(value);
-}
-void MainWindow::on_Bt_C_clicked(){
-    value = value + "C";
-    ui->Screen->setText(value);
-}
-void MainWindow::on_Bt_D_clicked(){
-    value = value + "D";
-    ui->Screen->setText(value);
-}
-void MainWindow::on_Bt_E_clicked(){
-    value = value + "E";
-    ui->Screen->setText(value);
-}
-void MainWindow::on_Bt_F_clicked(){
-    value = value + "F";
-    ui->Screen->setText(value);
-}
+
 void MainWindow::on_Bt_dot_clicked(){
     if(dot_count == 1)
         return;
-    if(value.length()== 0)
-        value = value + "0";
-    value = value + ".";
-    ui->Screen->setText(value);
+    if(display_val.toDouble() < DBL_EPSILON){
+        display_val = display_val + "0";
+        display_val = display_val + ".";
+    }
+    else{
+        display_val = display_val + ".";
+    }
+    ui->Screen->setText(display_val);
     dot_count = 1;
 }
+
+void MainWindow::resetMemory(){
+    display_val = "";
+    dot_count = 0;
+}
+
 //math operations
-void MainWindow::on_Bt_plus_clicked(){
-
+void MainWindow::GroupMathButton(){
+    connect(ui->Bt_plus, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
+    connect(ui->Bt_minus, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
+    connect(ui->Bt_multiply, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
+    connect(ui->Bt_divide, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
 }
-void MainWindow::on_Bt_minus_clicked(){
+void MainWindow::Bt_math_operators_clicked(){
+    Exp.emplace_back(display_val);
 
-}
-void MainWindow::on_Bt_multiply_clicked(){
+    QPushButton *button = static_cast<QPushButton *>(sender());
+    if(button->text() == "+")
+        plusTrigger = true;
+    if(button->text() == "-")
+        minusTrigger = true;
+    if(button->text() == "x")
+        mulTrigger = true;
+    if(button->text() == "÷")
+        divTrigger = true;
+    Exp.emplace_back(button->text());
+    resetMemory();
 
+    ui.
 }
-void MainWindow::on_Bt_divide_clicked(){
 
-}
 void MainWindow::on_Bt_plus_minus_clicked(){
 
 }
 void MainWindow::on_Bt_equals_clicked(){
-
+    resetMemory();
+    ui->Screen->setText(display_val);
 }
 void MainWindow::on_Bt_percent(){
 
@@ -151,10 +173,12 @@ void MainWindow::on_RadBt_bin_toggled(bool checked)
 {
     EnableAtoF(!checked);
     Enable2to9(!checked);
+    ui->Bt_dot->setEnabled(!checked);
 }
 void MainWindow::on_RadBt_hex_toggled(bool checked)
 {
     EnableAtoF(checked);
+    ui->Bt_dot->setEnabled(!checked);
 }
 //logical math
 void MainWindow::on_Bt_and_clicked(){
@@ -185,20 +209,27 @@ void MainWindow::on_Bt_RoR_clicked(){
 void MainWindow::on_Bt_mod_clicked(){
 
 }
+
 void MainWindow::on_Bt_erase_clicked(){
-    value = "";
-    ui->Screen->setText(value);
+    resetMemory();
+    ui->Screen->setText(display_val);
     //clear on-screen input but keep memory
 
 }
+
 void MainWindow::on_Bt_clear_clicked(){
-    value = "";
-    ui->Screen->setText(value);
+    display_val = "";
+    ui->Screen->setText(display_val);
     //clear screen and memory
 
 }
+
 void MainWindow::on_Bt_backspace_clicked(){
-    value.remove(value.length()-1, 1);
-    ui->Screen->setText(value);
+    if(display_val[display_val.length() - 1] == "."){
+        dot_count = 0;
+    }
+        display_val.remove(display_val.length()-1, 1);
+        ui->Screen->setText(display_val);
 }
 
+//Postfix conversion
