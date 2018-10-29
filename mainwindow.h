@@ -5,6 +5,8 @@
 #include <QPushButton>
 #include <QButtonGroup>
 
+#include "QInt.h"
+
 namespace Ui {
 class MainWindow;
 }

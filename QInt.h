@@ -71,7 +71,7 @@ public:
 	friend std::istream& operator>>(std::istream& stream, QInt& rhs);
 	friend std::ostream& operator<<(std::ostream& stream, const QInt& rhs);
 
-	// basic assigne arithmetic operators for QInt
+    // basic assign arithmetic operators for QInt
 	QInt& operator+=(const QInt& rhs);
 	QInt& operator-=(const QInt& rhs);
 	QInt& operator*=(const QInt& rhs);
