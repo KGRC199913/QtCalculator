@@ -1,15 +1,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#define MAX_MEM 10
 #include <QMainWindow>
 #include <QPushButton>
 #include <QButtonGroup>
 #include <QKeyEvent>
 #include <iostream>
 #include <vector>
+#include <QQueue>
 #include <QStack>
-#include "QInt.h"
-
 #include "QInt.h"
 
 namespace Ui {
@@ -25,6 +24,10 @@ public:
     ~MainWindow();
 
 private slots:
+    //Track History
+    void TrackHistory();
+    //Keyboard events
+    //void keyPressEvent(QKeyEvent *event);
     //Characters
     void GroupDigitButtons();
     void GroupCharButtons();
@@ -62,15 +65,18 @@ private slots:
     void Enable2to9(bool enable);
     int OperPriority(QString op);
     bool isOperator(QString op);
-    void ConvertToPostfix();
+    std::vector<QString> ConvertToPostfix();
+    QString Normalize(std::string x);
 
 private:
     Ui::MainWindow *ui;
     bool plusTrigger = false, minusTrigger = false, mulTrigger = false, divTrigger = false;
     QString display_val = "";
+    QQueue<QString> __history;
     std::vector<QString> Exp;
     int i = 0;
     int dot_count = 0;
+    QString result = "";
 };
 
 #endif // MAINWINDOW_H

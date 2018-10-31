@@ -1,25 +1,63 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include <QDebug>
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     //setWindowFlags(Qt::Window | Qt::FramelessWindowHint |Qt::WindowCloseButtonHint);
     ui->setupUi(this);   
-    setMinimumSize(390,520);
+    setMinimumSize(420,520);
     setStyleSheet("QMainWindow{ background-color: #333333 }");
     GroupDigitButtons();
     GroupCharButtons();
     GroupMathButton();
+    //TrackHistory();
     on_RadBt_dec_toggled(true);
-    ConvertToPostfix();
+    //ConvertToPostfix();
 
+    ui->BinScreen->setText(Normalize("1753109"));
+}
+
+QString MainWindow::Normalize(std::string x){
+    QInt tempQInt(x);
+    std::string binStr = tempQInt.to_binary_string();
+    std::string part1 = binStr.substr(0, 32), part2 = binStr.substr(32, 32), part3 = binStr.substr(64, 32), part4 = binStr.substr(96, 32);
+    int diff = 0;
+    std::string space = "    ";
+    for (int i = 4; i < 32; i = i + 4, ++++++++diff) {
+        part1.insert(part1.begin() + i + diff, space.begin(), space.end());
+        part2.insert(part2.begin() + i + diff, space.begin(), space.end());
+        part3.insert(part3.begin() + i + diff, space.begin(), space.end());
+        part4.insert(part4.begin() + i + diff, space.begin(), space.end());
+    }
+
+    std::string after = part1 + "\n\n" + part2 + "\n\n" + part3 + "\n\n" + part4;
+
+
+    return QString::fromStdString(after);
+}
+void MainWindow::TrackHistory(){
+    QQueue<QString> tempQueue;
+    for(int i = 0; i<MAX_MEM; i++){
+     //   __history.enqueue();
+    }
+
+    while (!__history.empty()) {
+        ui->History->append(__history.front());
+        tempQueue.enqueue(__history.dequeue());
+    }
+
+    while (!tempQueue.empty()) {
+        __history.enqueue(tempQueue.dequeue());
+    }
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+//Keyboard events
 
+//Set-enable Buttons
 void MainWindow::EnableAtoF(bool enable){
     ui->Bt_A->setEnabled(enable);
     ui->Bt_B->setEnabled(enable);
@@ -41,6 +79,7 @@ void MainWindow::Enable2to9(bool enable){
     ui->Bt_dot->setEnabled(enable);
 }
 
+//Postfix Conversion
 int MainWindow::OperPriority(QString op){
     if(op == "x" || op == "÷")
         return 3;
@@ -48,11 +87,12 @@ int MainWindow::OperPriority(QString op){
         return 1;
     return 0;
 }
+
 bool MainWindow::isOperator(QString op){
     return OperPriority(op);
 }
 
-void MainWindow::ConvertToPostfix(){
+std::vector<QString> MainWindow::ConvertToPostfix(){
     QStack <QString> ExpStack;
     std::vector<QString> number;
     for(auto iter = Exp.begin(); iter != Exp.end(); ++iter){
@@ -67,8 +107,11 @@ void MainWindow::ConvertToPostfix(){
             if(!ExpStack.empty())
                 throw new std::logic_error("wrong syntax");
         }
+        else if(!ExpStack.empty() && OperPriority(*iter) >= OperPriority(ExpStack.top())){
+            number.emplace_back(ExpStack.pop());
+        }
     }
-
+    return number;
 }
 
 //Characters 
@@ -150,36 +193,43 @@ void MainWindow::Bt_math_operators_clicked(){
         divTrigger = true;
     Exp.emplace_back(button->text());
     resetMemory();
-
-    ui.
+    ui->History->append(Exp[i++]);
 }
 
 void MainWindow::on_Bt_plus_minus_clicked(){
 
 }
 void MainWindow::on_Bt_equals_clicked(){
+    if(result == ""){
+
+    }
     resetMemory();
     ui->Screen->setText(display_val);
 }
+
 void MainWindow::on_Bt_percent(){
 
 }
+
 //base
 void MainWindow::on_RadBt_dec_toggled(bool checked)
 {
     EnableAtoF(!checked);
 }
+
 void MainWindow::on_RadBt_bin_toggled(bool checked)
 {
     EnableAtoF(!checked);
     Enable2to9(!checked);
     ui->Bt_dot->setEnabled(!checked);
 }
+
 void MainWindow::on_RadBt_hex_toggled(bool checked)
 {
     EnableAtoF(checked);
     ui->Bt_dot->setEnabled(!checked);
 }
+
 //logical math
 void MainWindow::on_Bt_and_clicked(){
 

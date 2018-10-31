@@ -106,4 +106,3 @@ private:
 	// use exclusive to convert a number to binary
 	static std::string divideBy2(std::string & input);
 };
-
