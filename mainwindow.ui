@@ -65,6 +65,8 @@ background-color:#333333;
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: white;
+color:black;
+font: 10pt &quot;Euclid&quot;;
 </string>
     </property>
     <property name="placeholderText">
