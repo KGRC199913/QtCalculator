@@ -94,8 +94,9 @@ bool MainWindow::isOperator(QString op){
 std::vector<QString> MainWindow::ConvertToPostfix(){
     QStack <QString> ExpStack;
     std::vector<QString> number;
-    for(auto iter = Exp.begin(); iter != Exp.end(); ++iter){
+	for(auto iter = Exp.begin(); iter != Exp.end(); ++iter) {
         if(!isOperator(*iter)){
+			std::cout << (*iter).toStdString() << std::endl;
             number.emplace_back(*iter);
         } else if(*iter == '('){
             ExpStack.push(*iter);
@@ -107,10 +108,15 @@ std::vector<QString> MainWindow::ConvertToPostfix(){
             if(ExpStack.empty())
                 throw new std::logic_error("wrong syntax");
         }
-        else if(!ExpStack.empty() && OperPriority(*iter) >= OperPriority(ExpStack.top())){
-            number.emplace_back(ExpStack.pop());
-            ExpStack.push_back(*iter);
-        }
+		else
+			if (ExpStack.empty()){
+				ExpStack.push(*iter);
+			}
+			else
+				if(OperPriority(*iter) >= OperPriority(ExpStack.top())){
+					number.emplace_back(ExpStack.pop());
+					ExpStack.push_back(*iter);
+				}
     }
     while(!ExpStack.empty())
         number.emplace_back(ExpStack.pop());
@@ -172,7 +178,6 @@ void MainWindow::on_Bt_dot_clicked(){
 }
 
 void MainWindow::resetMemory(){
-    Exp.clear();
     display_val = "";
     dot_count = 0;
 }
@@ -185,7 +190,7 @@ void MainWindow::GroupMathButton(){
     connect(ui->Bt_divide, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
 }
 void MainWindow::Bt_math_operators_clicked(){
-    if(display_val == "" || Exp.size() == 0){
+	if(display_val == "" && Exp.size() == 0){
         return;
     }
     else{
@@ -210,6 +215,7 @@ void MainWindow::Bt_math_operators_clicked(){
 void MainWindow::on_Bt_plus_minus_clicked(){
 
 }
+
 void MainWindow::on_Bt_equals_clicked(){
     if(display_val == "")
         return;
@@ -224,13 +230,16 @@ void MainWindow::on_Bt_equals_clicked(){
     ui->History->append(Exp[i]);
     i++;
     if(Exp.size() > 1){
-        std::cout << Exp.size();
         Exp = ConvertToPostfix();
-        std::cout << Exp.size();
         for(int i = 0; i < Exp.size(); i++){
             ui->History->append(Exp[i]);
         }
     }
+
+	//Calculate
+
+	//
+	display_val = "5"; //placeholder number
 }
 
 void MainWindow::on_Bt_percent(){
