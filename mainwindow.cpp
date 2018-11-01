@@ -96,7 +96,6 @@ std::vector<QString> MainWindow::ConvertToPostfix(){
     std::vector<QString> number;
 	for(auto iter = Exp.begin(); iter != Exp.end(); ++iter) {
         if(!isOperator(*iter)){
-			std::cout << (*iter).toStdString() << std::endl;
             number.emplace_back(*iter);
         } else if(*iter == '('){
             ExpStack.push(*iter);
@@ -113,13 +112,17 @@ std::vector<QString> MainWindow::ConvertToPostfix(){
 				ExpStack.push(*iter);
 			}
 			else
-				if(OperPriority(*iter) >= OperPriority(ExpStack.top())){
-					number.emplace_back(ExpStack.pop());
-					ExpStack.push_back(*iter);
-				}
+                if(OperPriority(*iter) <= OperPriority(ExpStack.top())){
+                    number.emplace_back(ExpStack.pop());
+                    ExpStack.push(*iter);
+                } else {
+                    ExpStack.push(*iter);
+                }
     }
+
     while(!ExpStack.empty())
         number.emplace_back(ExpStack.pop());
+
     return number;
 }
 
@@ -178,8 +181,9 @@ void MainWindow::on_Bt_dot_clicked(){
 }
 
 void MainWindow::resetMemory(){
+    Exp.resize(0);
     display_val = "";
-    dot_count = 0;
+    dot_count = i = 0;
 }
 
 //math operations
@@ -190,11 +194,15 @@ void MainWindow::GroupMathButton(){
     connect(ui->Bt_divide, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
 }
 void MainWindow::Bt_math_operators_clicked(){
-	if(display_val == "" && Exp.size() == 0){
+    //Assert debug
+    std::cout << display_val.toStdString() << " " << Exp.size() << std::endl;
+
+    if(display_val == "" && Exp.size() == 0){
         return;
     }
+    //if(display_val != "")
     else{
-    QPushButton *button = static_cast<QPushButton *>(sender());
+        QPushButton *button = static_cast<QPushButton *>(sender());
         Exp.emplace_back(display_val);
         if(button->text() == "+")
             plusTrigger = true;
@@ -205,7 +213,8 @@ void MainWindow::Bt_math_operators_clicked(){
         if(button->text() == "÷")
             divTrigger = true;
         Exp.emplace_back(button->text());
-        resetMemory();
+        display_val = "";
+        dot_count = 0;
         ui->History->append(Exp[i]);
         ui->History->append(Exp[++i]);
         i++;
@@ -225,7 +234,8 @@ void MainWindow::on_Bt_equals_clicked(){
     }
     else
         ui->Screen->setText(result);
-    resetMemory();
+    display_val = "";
+    dot_count = 0;
     ui->Screen->setText(display_val);
     ui->History->append(Exp[i]);
     i++;
@@ -239,7 +249,10 @@ void MainWindow::on_Bt_equals_clicked(){
 	//Calculate
 
 	//
-	display_val = "5"; //placeholder number
+    Exp.clear();
+    Exp.resize(0);
+    display_val = "10"; //placeholder number result;
+    Exp.emplace_back(display_val);
 }
 
 void MainWindow::on_Bt_percent(){
@@ -303,7 +316,7 @@ void MainWindow::on_Bt_erase_clicked(){
 }
 
 void MainWindow::on_Bt_clear_clicked(){
-    display_val = "";
+    resetMemory();
     ui->Screen->setText(display_val);
     //clear screen and memory
 
@@ -318,5 +331,3 @@ void MainWindow::on_Bt_backspace_clicked(){
         display_val.remove(display_val.length()-1, 1);
         ui->Screen->setText(display_val);
 }
-
-//Postfix conversion
