@@ -76,7 +76,7 @@ private:
     std::vector<QString> Exp;
     int i = 0;
     int dot_count = 0;
-    QString result = "";
+    QString calculate();
 };
 
 #endif // MAINWINDOW_H
