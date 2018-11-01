@@ -97,6 +97,7 @@ private:
 	// change this QInt to 2's complement notation
 	void to2ndComplement();
 
+	void setNBit(int pos, bool val);
 	// check if a string is representing a number
 	static bool isAllDigits(const std::string &str) {
 		return str.find_first_not_of("0123456789") == std::string::npos;

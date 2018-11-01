@@ -580,6 +580,13 @@ void QInt::to2ndComplement()
 	saveBits(bits);
 }
 
+void QInt::setNBit(int pos, bool val)
+{
+	std::vector<bool> bits = this->getBitset();
+	bits[pos] = val;
+	this->saveBits(bits);
+}
+
 bool QInt::isNegative() const
 {
 	return (this->m_high < 0);
@@ -631,22 +638,39 @@ QInt operator*(const QInt & lhs, const QInt & rhs)
 
 QInt operator/(const QInt & lhs, const QInt & rhs)
 {
-	QInt diviend = lhs, divisor = rhs;
-
 	bool isNegative = lhs.isNegative() ^ rhs.isNegative();
-	if (!divisor.isNegative())
-		divisor.to2ndComplement();
+	
+	std::vector<bool> lhsBits, rhsBits;
 
-	QInt quotient, remainder = lhs;
-	do {
-		remainder += divisor;
-		quotient += 1;
-	} 
-	while (!remainder && !remainder.isNegative()); // FIXME: add comparasion to simplize this
+	QInt A, Q, M;
+	Q = lhs;
+	M = rhs;
+	A = 0;
+	
+	bool carryBit = false;
+	for (int i = 0; i < 128; ++i) {
+		carryBit = false; // = 0
+		if (A.isNegative()) {
+			carryBit = Q.isNegative();
+			A <<= 1;		
+			Q <<= 1;			
+			A.setNBit(0, carryBit);
+			A += M;
+		}
+		else {
+			carryBit = Q.isNegative();
+			A <<= 1;
+			Q <<= 1;
+			A.setNBit(0, carryBit);
+			A -= M;
+		}
 
+		Q.setNBit(0, !A.isNegative());
+	}
 	if (isNegative)
-		quotient.to2ndComplement();
-	return quotient;
+		Q.to2ndComplement();
+
+	return Q;
 }
 
 QInt operator<<(const QInt & lhs, unsigned int shift)
