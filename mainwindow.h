@@ -46,12 +46,6 @@ private slots:
     void on_RadBt_bin_toggled(bool checked);
     void on_RadBt_hex_toggled(bool checked);
     //logical math
-    void on_Bt_and_clicked();
-    void on_Bt_or_clicked();
-    void on_Bt_xor_clicked();
-    void on_Bt_not_clicked();
-    void on_Bt_lsh_clicked();
-    void on_Bt_rsh_clicked();
     void on_Bt_RoL_clicked();
     void on_Bt_RoR_clicked();
     //functional button
@@ -74,6 +68,7 @@ private:
     QString display_val = "";
     QQueue<QString> __history;
     std::vector<QString> Exp;
+    QString result ="";
     int i = 0;
     int dot_count = 0;
     QString calculate();

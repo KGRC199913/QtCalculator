@@ -12,8 +12,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     GroupMathButton();
     //TrackHistory();
     on_RadBt_dec_toggled(true);
-
-    ui->BinScreen->setText(Normalize("1000000000003274673242"));
 }
 
 QString MainWindow::Normalize(std::string x){
@@ -163,7 +161,7 @@ void MainWindow::Bt_digits_clicked(){
         display_val = display_val + button->text();
         ui->Screen->setText(display_val);
     }
-
+    ui->BinScreen->setText(Normalize(display_val.toStdString()));
 }
 
 void MainWindow::on_Bt_dot_clicked(){
@@ -192,6 +190,12 @@ void MainWindow::GroupMathButton(){
     connect(ui->Bt_minus, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
     connect(ui->Bt_multiply, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
     connect(ui->Bt_divide, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
+    connect(ui->Bt_and, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
+    connect(ui->Bt_or, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
+    connect(ui->Bt_xor, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
+    connect(ui->Bt_not, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
+    connect(ui->Bt_lsh, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
+    connect(ui->Bt_rsh, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
 }
 void MainWindow::Bt_math_operators_clicked(){
     //Assert debug
@@ -200,10 +204,12 @@ void MainWindow::Bt_math_operators_clicked(){
     if(display_val == "" && Exp.size() == 0){
         return;
     }
-    //if(display_val != "")
     else{
         QPushButton *button = static_cast<QPushButton *>(sender());
-        Exp.emplace_back(display_val);
+        if(result == "")
+            Exp.emplace_back(display_val);
+        else
+            Exp.emplace_back(result);
         if(button->text() == "+")
             plusTrigger = true;
         if(button->text() == "-")
@@ -226,43 +232,77 @@ void MainWindow::on_Bt_plus_minus_clicked(){
 }
 
 void MainWindow::on_Bt_equals_clicked(){
-    if(display_val == "")
+    if(display_val == "" && Exp.empty())
         return;
-    Exp.emplace_back(display_val);
-    if(result == ""){
-        ui->Screen->setText(display_val);
-    }
-    else
+//    if(result == ""){
+//        ui->Screen->setText(display_val);
+//        return;
+//    }
+    else{
+        Exp.emplace_back(display_val);
         ui->Screen->setText(result);
-    display_val = "";
-    dot_count = 0;
-    ui->Screen->setText(display_val);
-    ui->History->append(Exp[i]);
-    i++;
-    if(Exp.size() > 1){
-        Exp = ConvertToPostfix();
-        for(int i = 0; i < Exp.size(); i++){
-            ui->History->append(Exp[i]);
+        display_val = "";
+        dot_count = 0;
+        ui->Screen->setText(display_val);
+        ui->History->append(Exp[i]);
+        i++;
+        if(Exp.size() > 1){
+            Exp = ConvertToPostfix();
+            for(int i = 0; i < Exp.size(); i++){
+                ui->History->append(Exp[i]);
+            }
+        }
+        QStack<QString> EvalueStack;
+        for(auto iter = Exp.begin(); iter != Exp.end(); ++iter){
+            if(!isOperator(*iter))
+                EvalueStack.push(*iter);
+            else{
+                std::string res;
+                QInt operand_1(EvalueStack.pop().toStdString());
+                QInt operand_2(EvalueStack.pop().toStdString());
+                if(*iter == "+"){
+                    res = (operand_1 + operand_2).to_string();
+                    EvalueStack.push_back(QString::fromStdString(res));
+                }
+                if(*iter == "-"){
+                    res = (operand_1 - operand_2).to_string();
+                    EvalueStack.push_back(QString::fromStdString(res));
+                }
+                if(*iter == "x"){
+                    res = (operand_1 * operand_2).to_string();
+                    EvalueStack.push_back(QString::fromStdString(res));
+                }
+                if(*iter == "÷"){
+                    res = (operand_1 / operand_2).to_string();
+                    EvalueStack.push_back(QString::fromStdString(res));
+                }
+                ui->History->append(EvalueStack.pop());
+                result = QString::fromStdString(res);
+            }
         }
     }
-
-	//Calculate
-
-	//
-    Exp.clear();
     Exp.resize(0);
-    display_val = "10"; //placeholder number result;
-    Exp.emplace_back(display_val);
+    display_val = result;
+    ui->Screen->setText(display_val);
+    Exp.emplace_back(result);
+
 }
 
 void MainWindow::on_Bt_percent(){
-
+    if(display_val == "")
+        return;
+    QInt tempQInt(display_val.toStdString());
+    std::string percent = (tempQInt /= 100).to_string();
+    ui->Screen->setText(QString::fromStdString(percent));
 }
 
 //base
 void MainWindow::on_RadBt_dec_toggled(bool checked)
 {
     EnableAtoF(!checked);
+    QInt tempQInt(display_val.toStdString());
+    std::string dec = tempQInt.to_string();
+    ui->Screen->setText(QString::fromStdString(dec));
 }
 
 void MainWindow::on_RadBt_bin_toggled(bool checked)
@@ -270,33 +310,22 @@ void MainWindow::on_RadBt_bin_toggled(bool checked)
     EnableAtoF(!checked);
     Enable2to9(!checked);
     ui->Bt_dot->setEnabled(!checked);
-}
+    QInt tempQInt(display_val.toStdString());
+    std::string bin = tempQInt.to_binary_string();
+    ui->Screen->setText(QString::fromStdString(bin));
+    ui->BinScreen->setText(Normalize(bin));
+;}
 
 void MainWindow::on_RadBt_hex_toggled(bool checked)
 {
     EnableAtoF(checked);
     ui->Bt_dot->setEnabled(!checked);
+    QInt tempQInt(display_val.toStdString());
+    std::string hex = tempQInt.to_hex();
+    ui->Screen->setText(QString::fromStdString(hex));
 }
 
 //logical math
-void MainWindow::on_Bt_and_clicked(){
-
-}
-void MainWindow::on_Bt_or_clicked(){
-
-}
-void MainWindow::on_Bt_xor_clicked(){
-
-}
-void MainWindow::on_Bt_not_clicked(){
-
-}
-void MainWindow::on_Bt_lsh_clicked(){
-
-}
-void MainWindow::on_Bt_rsh_clicked(){
-
-}
 void MainWindow::on_Bt_RoL_clicked(){
 
 }
