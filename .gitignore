@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+
+# Qt profile files
+*.user.*
+
+# VS trash files
+*.vcxproj
+*.vcxproj.*

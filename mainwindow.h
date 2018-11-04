@@ -65,12 +65,13 @@ private slots:
 private:
     Ui::MainWindow *ui;
     bool plusTrigger = false, minusTrigger = false, mulTrigger = false, divTrigger = false;
-    QString display_val = "";
+	int i = 0;
+	int dot_count = 0;
+	bool wasEqualClicked = false;
+	QString display_val = "";
     QQueue<QString> __history;
     std::vector<QString> Exp;
-    QString result ="";
-    int i = 0;
-    int dot_count = 0;
+	//QString result ="";
     QString calculate();
 };
 

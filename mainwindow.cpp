@@ -12,6 +12,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     GroupMathButton();
     //TrackHistory();
     on_RadBt_dec_toggled(true);
+	ui->History->setAlignment(Qt::AlignRight);
+	QInt loremIpsumVal("0");
+	ui->BinScreen->setText(Normalize(loremIpsumVal.to_string()));
 }
 
 QString MainWindow::Normalize(std::string x){
@@ -34,9 +37,6 @@ QString MainWindow::Normalize(std::string x){
 }
 void MainWindow::TrackHistory(){
     QQueue<QString> tempQueue;
-    for(int i = 0; i<MAX_MEM; i++){
-     //   __history.enqueue();
-    }
 
     while (!__history.empty()) {
         ui->History->append(__history.front());
@@ -148,6 +148,12 @@ void MainWindow::Bt_chars_clicked(){
     QPushButton *button = static_cast<QPushButton *>(sender());
     display_val = display_val + button->text();
     ui->Screen->setText(display_val);
+
+	if (wasEqualClicked) {
+		Exp.clear();
+		wasEqualClicked = false;
+		i = 0;
+	}
 }
 
 void MainWindow::Bt_digits_clicked(){
@@ -162,6 +168,12 @@ void MainWindow::Bt_digits_clicked(){
         ui->Screen->setText(display_val);
     }
     ui->BinScreen->setText(Normalize(display_val.toStdString()));
+
+	if (wasEqualClicked) {
+		Exp.clear();
+		wasEqualClicked = false;
+		i = 0;
+	}
 }
 
 void MainWindow::on_Bt_dot_clicked(){
@@ -198,18 +210,14 @@ void MainWindow::GroupMathButton(){
     connect(ui->Bt_rsh, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
 }
 void MainWindow::Bt_math_operators_clicked(){
-    //Assert debug
-    std::cout << display_val.toStdString() << " " << Exp.size() << std::endl;
-
-    if(display_val == "" && Exp.size() == 0){
+	wasEqualClicked = false;
+	if(display_val == "" && Exp.size() == 0){
         return;
     }
     else{
         QPushButton *button = static_cast<QPushButton *>(sender());
-        if(result == "")
-            Exp.emplace_back(display_val);
-        else
-            Exp.emplace_back(result);
+		if (display_val != "")
+			Exp.emplace_back(display_val);
         if(button->text() == "+")
             plusTrigger = true;
         if(button->text() == "-")
@@ -240,32 +248,31 @@ void MainWindow::on_Bt_equals_clicked(){
 //    }
     else{
         Exp.emplace_back(display_val);
-        ui->Screen->setText(result);
         display_val = "";
         dot_count = 0;
         ui->Screen->setText(display_val);
         ui->History->append(Exp[i]);
         i++;
-        if(Exp.size() > 1){
+		if(Exp.size() > 1)
             Exp = ConvertToPostfix();
-            for(int i = 0; i < Exp.size(); i++){
-                ui->History->append(Exp[i]);
-            }
-        }
+
         QStack<QString> EvalueStack;
+		std::string res;
+		QInt operand_1;
+		QInt operand_2;
+
         for(auto iter = Exp.begin(); iter != Exp.end(); ++iter){
             if(!isOperator(*iter))
                 EvalueStack.push(*iter);
             else{
-                std::string res;
-                QInt operand_1(EvalueStack.pop().toStdString());
-                QInt operand_2(EvalueStack.pop().toStdString());
+				operand_1 = QInt(EvalueStack.pop().toStdString());
+				operand_2 = QInt(EvalueStack.pop().toStdString());
                 if(*iter == "+"){
                     res = (operand_1 + operand_2).to_string();
                     EvalueStack.push_back(QString::fromStdString(res));
                 }
                 if(*iter == "-"){
-                    res = (operand_1 - operand_2).to_string();
+					res = (operand_2 - operand_1).to_string();
                     EvalueStack.push_back(QString::fromStdString(res));
                 }
                 if(*iter == "x"){
@@ -273,19 +280,22 @@ void MainWindow::on_Bt_equals_clicked(){
                     EvalueStack.push_back(QString::fromStdString(res));
                 }
                 if(*iter == "÷"){
-                    res = (operand_1 / operand_2).to_string();
+					res = (operand_2 / operand_1).to_string();
                     EvalueStack.push_back(QString::fromStdString(res));
                 }
+				ui->History->append("_____________\n");
                 ui->History->append(EvalueStack.pop());
-                result = QString::fromStdString(res);
+				display_val = QString::fromStdString(res);
             }
         }
     }
     Exp.resize(0);
-    display_val = result;
     ui->Screen->setText(display_val);
-    Exp.emplace_back(result);
-
+	ui->BinScreen->setText(this->Normalize(display_val.toStdString()));
+	Exp.emplace_back(display_val);
+	i = 1;
+	wasEqualClicked = true;
+	ui->History->append("\n----------------------------------\n");
 }
 
 void MainWindow::on_Bt_percent(){
