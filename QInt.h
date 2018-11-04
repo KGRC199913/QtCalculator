@@ -22,11 +22,11 @@ public:
 	// string Constructor, convert a string represent a number to QInt
 	// if number is more than 127 character throw an out_of_range exception
 	// if input string is not a number, throw an invalid_argument exception
-	// TODO: bound check;
 	QInt(std::string number);
 	// bits Constructor, convert a vector of bool to QInt
 	// if the vector's size is larger than 128, the superfluous part will be cut 
 	QInt(std::vector<bool> bits);
+	// string Constructor, convert a string represent a Hex to QInt
 	// Destructor
 	virtual ~QInt();
 	// Use default copy constructor
@@ -52,6 +52,10 @@ public:
 	static std::string bigNumAdd(std::string& num1, std::string& num2);
 	// Subtract 2 big numbers represent by strings
 	static std::string bigNumMinus(std::string& num1, std::string& num2);
+	// Convert Hex to Bin
+	static std::string HextoBin(std::string Hex);
+	//C\get an QInt from Hex
+	static QInt HexToQint(std::string Hex);
 
 	// basic arithmetic operators for QInt
 	friend QInt operator+(const QInt& lhs, const QInt& rhs);

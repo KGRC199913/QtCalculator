@@ -55,7 +55,7 @@ QInt::QInt(std::string number)
 QInt::QInt(std::vector<bool> bits)
 {
 	if (bits.size() < 128)
-		bits.insert(bits.end(), 128 - bits.size(), false);
+		bits.insert(bits.begin(), 128 - bits.size(), false);
 	if (bits.size() > 128)
 		bits.erase(bits.end() - 1 - (bits.size() - 128));
 	this->saveBits(bits);
@@ -163,7 +163,6 @@ std::string QInt::to_hex() const
 																	hex += "F";
 	}
 
-	hex = "0x" + hex;
 	return hex;
 }
 
@@ -471,6 +470,217 @@ std::string QInt::bigNumMinus(std::string & num1, std::string & num2)
 		ans = "-" + ans;
 
 	return ans;
+}
+
+
+std::string QInt::HextoBin(std::string Hex)
+{
+	std::vector<bool> bits;
+	for (auto ch : Hex) {
+		if (ch == '0') {
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+		}
+		if (ch == '1') {
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+		}
+		if (ch == '2') {
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+		}
+		if (ch == '3') {
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+		}
+		if (ch == '4') {
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+		}
+		if (ch == '5') {
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+		}
+		if (ch == '6') {
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+		}
+		if (ch == '7') {
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+		}
+		if (ch == '8') {
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+		}
+		if (ch == '9') {
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+		}
+		if (ch == 'A') {
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+		}
+		if (ch == 'B') {
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+		}
+		if (ch == 'C') {
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+		}
+		if (ch == 'D') {
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+		}
+		if (ch == 'E') {
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+		}
+		if (ch == 'F') {
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+		}
+	}
+
+	return QInt(bits).to_binary_string();
+}
+
+QInt QInt::HexToQint(std::string Hex)
+{
+	std::vector<bool> bits;
+	for (auto ch : Hex) {
+		if (ch == '0') {
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+		}
+		if (ch == '1') {
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+		}
+		if (ch == '2') {
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+		}
+		if (ch == '3') {
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+		}
+		if (ch == '4') {
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+		}
+		if (ch == '5') {
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+		}
+		if (ch == '6') {
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+		}
+		if (ch == '7') {
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+		}
+		if (ch == '8') {
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+		}
+		if (ch == '9') {
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+		}
+		if (ch == 'A') {
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+		}
+		if (ch == 'B') {
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+		}
+		if (ch == 'C') {
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(0);
+		}
+		if (ch == 'D') {
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+			bits.emplace_back(1);
+		}
+		if (ch == 'E') {
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(0);
+		}
+		if (ch == 'F') {
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+			bits.emplace_back(1);
+		}
+	}
+
+	return QInt(bits);
 }
 
 QInt::operator bool() const

@@ -145,19 +145,26 @@ void MainWindow::GroupCharButtons()
 }
 
 void MainWindow::Bt_chars_clicked(){
-    QPushButton *button = static_cast<QPushButton *>(sender());
-    display_val = display_val + button->text();
-    ui->Screen->setText(display_val);
-
 	if (wasEqualClicked) {
+		display_val = "";
 		Exp.clear();
 		wasEqualClicked = false;
 		i = 0;
 	}
+    QPushButton *button = static_cast<QPushButton *>(sender());
+    display_val = display_val + button->text();
+    ui->Screen->setText(display_val);
 }
 
 void MainWindow::Bt_digits_clicked(){
-    QPushButton *button = static_cast<QPushButton *>(sender());
+	if (wasEqualClicked) {
+		display_val = "";
+		Exp.clear();
+		wasEqualClicked = false;
+		i = 0;
+	}
+
+	QPushButton *button = static_cast<QPushButton *>(sender());
     if(display_val.toDouble() < DBL_EPSILON && display_val.length() < 2 && !ui->RadBt_bin->isChecked())
     {
         ui->Screen->setText(button->text());
@@ -168,12 +175,6 @@ void MainWindow::Bt_digits_clicked(){
         ui->Screen->setText(display_val);
     }
     ui->BinScreen->setText(Normalize(display_val.toStdString()));
-
-	if (wasEqualClicked) {
-		Exp.clear();
-		wasEqualClicked = false;
-		i = 0;
-	}
 }
 
 void MainWindow::on_Bt_dot_clicked(){
@@ -194,6 +195,7 @@ void MainWindow::resetMemory(){
     Exp.resize(0);
     display_val = "";
     dot_count = i = 0;
+	wasEqualClicked = false;
 }
 
 //math operations
@@ -283,19 +285,21 @@ void MainWindow::on_Bt_equals_clicked(){
 					res = (operand_2 / operand_1).to_string();
                     EvalueStack.push_back(QString::fromStdString(res));
                 }
-				ui->History->append("_____________\n");
-                ui->History->append(EvalueStack.pop());
+				EvalueStack.pop();
 				display_val = QString::fromStdString(res);
+				EvalueStack.push(display_val);
             }
         }
     }
     Exp.resize(0);
+	ui->History->append("_____________\n");
+	ui->History->append(display_val);
     ui->Screen->setText(display_val);
 	ui->BinScreen->setText(this->Normalize(display_val.toStdString()));
 	Exp.emplace_back(display_val);
 	i = 1;
 	wasEqualClicked = true;
-	ui->History->append("\n----------------------------------\n");
+	ui->History->append("\n------------------------------\n");
 }
 
 void MainWindow::on_Bt_percent(){
