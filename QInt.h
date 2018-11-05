@@ -39,9 +39,9 @@ public:
 	std::string to_hex() const;
 	
 	// rotate the QInt [time] times to the left
-	QInt& rol(unsigned time);
+	QInt& rol(QInt time);
 	// rotate the QInt [time] times to the right
-	QInt& ror(unsigned time);
+	QInt& ror(QInt time);
 
 	// convert a binary (represent by a vector of bools)
 	// to a hexadecimal (represent by a string)
@@ -62,8 +62,8 @@ public:
 	friend QInt operator-(const QInt& lhs, const QInt& rhs);
 	friend QInt operator*(const QInt& lhs, const QInt& rhs);
 	friend QInt operator/(const QInt& lhs, const QInt& rhs);
-	friend QInt operator<<(const QInt& lhs, unsigned int shift);
-	friend QInt operator>>(const QInt& lhs, unsigned int shift);
+	friend QInt operator<<(const QInt& lhs, QInt shift);
+	friend QInt operator>>(const QInt& lhs, QInt shift);
 	friend QInt operator&(const QInt& lhs, const QInt& rhs);
 	friend QInt operator|(const QInt& lhs, const QInt& rhs);
 	friend QInt operator^(const QInt& lhs, const QInt& rhs);
@@ -80,8 +80,8 @@ public:
 	QInt& operator-=(const QInt& rhs);
 	QInt& operator*=(const QInt& rhs);
 	QInt& operator/=(const QInt& rhs);
-	QInt& operator<<=(unsigned shift);
-	QInt& operator>>=(unsigned shift);
+	QInt& operator<<=(QInt shift);
+	QInt& operator>>=(QInt shift);
 	QInt& operator&=(const QInt& rhs);
 	QInt& operator|=(const QInt& rhs);
 	QInt& operator^=(const QInt& rhs);

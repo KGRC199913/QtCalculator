@@ -82,7 +82,7 @@ void MainWindow::Enable2to9(bool enable){
 int MainWindow::OperPriority(QString op){
     if(op == "x" || op == "÷")
         return 3;
-    else if(op == "+" || op == "-")
+	if(op == "+" || op == "-")
         return 1;
     return 0;
 }

@@ -166,32 +166,32 @@ std::string QInt::to_hex() const
 	return hex;
 }
 
-QInt & QInt::rol(unsigned time)
+QInt & QInt::rol(QInt time)
 {
 	std::vector<bool> bits = this->getBitset();
 
 	bool temp = false;
-	while (time > 0) {
+	while (time) {
 		temp = bits[127];
 		bits.erase(bits.end() - 1);
 		bits.emplace(bits.begin(), temp);
-		--time;
+		time = time - QInt("1");
 	}
 
 	this->saveBits(bits);
 	return *this;
 }
 
-QInt & QInt::ror(unsigned time)
+QInt & QInt::ror(QInt time)
 {
 	std::vector<bool> bits = this->getBitset();
 
 	bool temp = false;
-	while (time > 0) {
+	while (time) {
 		temp = bits[0];
 		bits.erase(bits.begin());
 		bits.emplace_back(temp);
-		--time;
+		time = time - QInt("1");
 	}
 
 	this->saveBits(bits);
@@ -685,7 +685,7 @@ QInt QInt::HexToQint(std::string Hex)
 
 QInt::operator bool() const
 {
-	return (this->m_high == 0 && this->m_low == 0);
+	return !(this->m_high == 0 && this->m_low == 0);
 }
 
 QInt & QInt::operator+=(const QInt & rhs)
@@ -712,13 +712,13 @@ QInt & QInt::operator/=(const QInt & rhs)
 	return *this;
 }
 
-QInt & QInt::operator<<=(unsigned shift)
+QInt & QInt::operator<<=(QInt shift)
 {
 	*this = *this << shift;
 	return *this;
 }
 
-QInt & QInt::operator>>=(unsigned shift)
+QInt & QInt::operator>>=(QInt shift)
 {
 	*this = *this >> shift;
 	return *this;
@@ -883,13 +883,13 @@ QInt operator/(const QInt & lhs, const QInt & rhs)
 	return Q;
 }
 
-QInt operator<<(const QInt & lhs, unsigned int shift)
+QInt operator<<(const QInt & lhs, QInt shift)
 {
 	std::vector<bool> lhsBits = lhs.getBitset();
-	while (shift > 0) {
+	while (shift) {
 		lhsBits.erase(lhsBits.end() - 1);
 		lhsBits.emplace(lhsBits.begin(), false);
-		--shift;
+		shift = shift - QInt("1");
 	}
 
 	QInt result;
@@ -898,15 +898,15 @@ QInt operator<<(const QInt & lhs, unsigned int shift)
 
 }
 
-QInt operator>>(const QInt & lhs, unsigned int shift)
+QInt operator>>(const QInt & lhs, QInt shift)
 {
 	std::vector<bool> lhsBits = lhs.getBitset();
 	bool isNegative = *(lhsBits.end() - 1);
 
-	while (shift > 0) {
+	while (shift) {
 		lhsBits.erase(lhsBits.begin());
 		lhsBits.emplace_back(isNegative);
-		--shift;
+		shift = shift - QInt("1");
 	}
 
 
