@@ -64,11 +64,11 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    bool plusTrigger = false, minusTrigger = false, mulTrigger = false, divTrigger = false;
 	int i = 0;
 	int dot_count = 0;
-	bool wasEqualClicked = false;
-	QString display_val = "";
+    bool wasEqualClicked = false, wasOperatorClicked = false;
+    bool wasRadBin = false, wasRadDec = false, wasRadHex = false;
+    QString display_val = "";
     QQueue<QString> __history;
     std::vector<QString> Exp;
 	//QString result ="";

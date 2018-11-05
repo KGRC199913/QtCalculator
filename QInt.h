@@ -10,7 +10,7 @@
 // |represent range: from −170,141,183,460,469,231,731,687,303,715,884,105,728|
 // |to 170,141,183,460,469,231,731,687,303,715,884,105,727                    |
 // ----------------------------------------------------------------------------
-
+std::vector<bool> BinStrToVectorBool(std::string binStr);
 class QInt final
 {
 public:
@@ -111,3 +111,4 @@ private:
 	// use exclusive to convert a number to binary
 	static std::string divideBy2(std::string & input);
 };
+

@@ -4,11 +4,11 @@
 #include <QVector>
 
 std::vector<bool> BinStrToVectorBool(std::string binStr) {
-	std::vector<bool> bits;
-	for (auto ch : binStr) {
-		bits.emplace_back(ch - '0');
-	}
-	return bits;
+    std::vector<bool> bits;
+    for (auto ch : binStr) {
+        bits.emplace(bits.begin(), ch - '0');
+    }
+    return bits;
 }
 
 void HandleCommandlineArgs(std::ifstream & input, std::ofstream & output) {
@@ -80,16 +80,13 @@ void HandleCommandlineArgs(std::ifstream & input, std::ofstream & output) {
 }
 int main(int argc, char *argv[])
 {
-	if (argc > 0) {
-		QApplication a(argc, argv);
-		MainWindow window;
-		window.show();
-		return a.exec();
-	} else {
+    if (argc > 0) {
+        QApplication a(argc, argv);
+        MainWindow window;
+        window.show();
+        return a.exec();
+    } else {
 
-	}
+    }
 
-	//QInt x("6");
-	//QInt y("3");
-	//std::cout << (x / y) << std::endl;
 }

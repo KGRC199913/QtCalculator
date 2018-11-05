@@ -55,7 +55,7 @@ QInt::QInt(std::string number)
 QInt::QInt(std::vector<bool> bits)
 {
 	if (bits.size() < 128)
-		bits.insert(bits.begin(), 128 - bits.size(), false);
+        bits.insert(bits.end(), 128 - bits.size(), false);
 	if (bits.size() > 128)
 		bits.erase(bits.end() - 1 - (bits.size() - 128));
 	this->saveBits(bits);
@@ -574,7 +574,7 @@ std::string QInt::HextoBin(std::string Hex)
 			bits.emplace_back(1);
 		}
 	}
-
+    std::reverse(bits.begin(), bits.end());
 	return QInt(bits).to_binary_string();
 }
 
@@ -679,7 +679,7 @@ QInt QInt::HexToQint(std::string Hex)
 			bits.emplace_back(1);
 		}
 	}
-
+    std::reverse(bits.begin(), bits.end());
 	return QInt(bits);
 }
 
