@@ -89,6 +89,8 @@ public:
 	// check if this QInt is a negative
 	// can be delete if there is comparision
 	bool isNegative() const;
+	// change this QInt to 2's complement notation
+	void to2ndComplement();
 private:
 	int64_t m_high;
 	uint64_t m_low;
@@ -98,9 +100,7 @@ private:
 	std::vector<bool> getBitset() const;
 	// save a bitset represent in a vector of bools to this Qint
 	void saveBits(std::vector<bool> &bits);
-	// change this QInt to 2's complement notation
-	void to2ndComplement();
-
+	//set N'th bit to value val
 	void setNBit(int pos, bool val);
 	// check if a string is representing a number
 	static bool isAllDigits(const std::string &str) {

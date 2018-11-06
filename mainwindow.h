@@ -57,7 +57,7 @@ private:
 	int i = 0;
 	int dot_count = 0;
     bool wasEqualClicked = false, wasOperatorClicked = false;
-    bool isBin = false, isDec = false, isHex = false;
+	bool isBin = false, isDec = false, isHex = false;
     bool wasRadBin = false, wasRadDec = false, wasRadHex = false;
     QString display_val = "";
     QQueue<QString> __history;

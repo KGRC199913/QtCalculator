@@ -65,21 +65,21 @@ void HandleCommandlineArgs(std::ifstream & input, std::ofstream & output) {
 				if (tokensList[2] == "+")
 					result = operand1 + operand2;
 				if (tokensList[2] == "-")
-					result = operand1 + operand2;
+					result = operand1 - operand2;
 				if (tokensList[2] == "*")
-					result = operand1 + operand2;
+					result = operand1 * operand2;
 				if (tokensList[2] == "/")
-					result = operand1 + operand2;
+					result = operand1 / operand2;
 				if (tokensList[2] == "&")
-					result = operand1 + operand2;
+					result = operand1 & operand2;
 				if (tokensList[2] == "|")
-					result = operand1 + operand2;
+					result = operand1 | operand2;
 				if (tokensList[2] == "^")
-					result = operand1 + operand2;
+					result = operand1 ^ operand2;
 				if (tokensList[2] == "<<")
-					result = operand1 + operand2;
+					result = operand1 << operand2;
 				if (tokensList[2] == ">>")
-					result = operand1 + operand2;
+					result = operand1 >> operand2;
 
 
 
@@ -117,9 +117,10 @@ int main(int argc, char *argv[])
 		MainWindow window;
 		window.show();
 		return a.exec();
-    }
+	}
 	std::ifstream input(argv[1]);
 	std::ofstream output(argv[2]);
 	HandleCommandlineArgs(input, output);
+
 	return 0;
 }

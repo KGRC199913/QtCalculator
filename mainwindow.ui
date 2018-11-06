@@ -52,7 +52,7 @@ background-color:#333333;
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>90</y>
+      <y>100</y>
       <width>401</width>
       <height>101</height>
      </rect>
@@ -1290,7 +1290,7 @@ font-size:10pt;
       <x>10</x>
       <y>10</y>
       <width>401</width>
-      <height>61</height>
+      <height>81</height>
      </rect>
     </property>
     <property name="font">

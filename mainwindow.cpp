@@ -14,6 +14,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //TrackHistory();
     on_RadBt_dec_toggled(true);
     wasRadDec = true;
+	ui->RadBt_bin->setEnabled(true);
+	ui->RadBt_dec->setEnabled(true);
+	ui->RadBt_hex->setEnabled(true);
 	ui->History->setAlignment(Qt::AlignRight);
 	QInt loremIpsumVal("0");
     ui->BinScreen->setText(Normalize(loremIpsumVal.to_string()));
@@ -157,7 +160,9 @@ void MainWindow::Bt_chars_clicked(){
     QPushButton *button = static_cast<QPushButton *>(sender());
     display_val = display_val + button->text();
     ui->Screen->setText(display_val);
-
+	QInt intToNormalize;
+	intToNormalize = QInt::HexToQint(display_val.toStdString());
+	ui->BinScreen->setText(Normalize(intToNormalize.to_string()));
 }
 
 void MainWindow::Bt_digits_clicked(){
@@ -167,9 +172,15 @@ void MainWindow::Bt_digits_clicked(){
 		wasEqualClicked = false;
 		i = 0;
 	}
+
+	isBin = ui->RadBt_bin->isChecked();
+	isDec = ui->RadBt_dec->isChecked();
+	isHex = ui->RadBt_hex->isChecked();
+
     ui->RadBt_bin->setEnabled(ui->RadBt_bin->isChecked());
     ui->RadBt_dec->setEnabled(ui->RadBt_dec->isChecked());
     ui->RadBt_hex->setEnabled(ui->RadBt_hex->isChecked());
+
     wasOperatorClicked = false;
 	QPushButton *button = static_cast<QPushButton *>(sender());
     if(display_val.toDouble() < DBL_EPSILON && display_val.length() < 2 && !ui->RadBt_bin->isChecked())
@@ -181,7 +192,19 @@ void MainWindow::Bt_digits_clicked(){
         display_val = display_val + button->text();
         ui->Screen->setText(display_val);
     }
-    ui->BinScreen->setText(Normalize(display_val.toStdString()));
+
+	QInt intToNormalize;
+	if (isBin) {
+		intToNormalize = QInt(BinStrToVectorBool(display_val.toStdString()));
+		ui->BinScreen->setText(Normalize(intToNormalize.to_string()));
+	}
+	if (isDec) {
+		ui->BinScreen->setText(Normalize(display_val.toStdString()));
+	}
+	if (isHex) {
+		intToNormalize = QInt::HexToQint(display_val.toStdString());
+		ui->BinScreen->setText(Normalize(intToNormalize.to_string()));
+	}
 }
 
 void MainWindow::on_Bt_dot_clicked(){
@@ -246,30 +269,44 @@ void MainWindow::Bt_math_operators_clicked(){
 }
 
 void MainWindow::on_Bt_plus_minus_clicked(){
-    if(display_val == "" || display_val == "0"){
+	if (wasOperatorClicked)
+		return;
+	if (display_val == "" || display_val == "0"){
         return;
-    }
-    if(isBin){
-        QInt tempQInt(display_val.toStdString());
-        //tempQInt.to2ndComplement();
-        display_val = QString::fromStdString(tempQInt.to_string());
-    }
-    if(isHex){
-        QInt tempQInt(display_val.toStdString());
-        tempQInt = tempQInt.to_binary_string();
-        //tempQInt.to2ndComplement();
-        display_val = QString::fromStdString(tempQInt.to_string());
-    }
-    else{
-        if(display_val[0] != '-')
-        {
-            display_val.prepend("-");
-            ui->Screen->setText(display_val);
-        }
-        else
-            display_val.remove(0,1);
-            ui->Screen->setText(display_val);
-    }
+	}
+
+	isBin = ui->RadBt_bin->isChecked();
+	isDec = ui->RadBt_dec->isChecked();
+	isHex = ui->RadBt_hex->isChecked();
+
+	if (isBin) {
+		QInt tempQInt(BinStrToVectorBool(display_val.toStdString()));
+		tempQInt.to2ndComplement();
+		display_val = QString::fromStdString(tempQInt.to_binary_string());
+		ui->Screen->setText(display_val);
+		ui->BinScreen->setText(Normalize(tempQInt.to_string()));
+	} else {
+		if(isHex) {
+			QInt tempQInt = QInt::HexToQint(display_val.toStdString());
+			tempQInt.to2ndComplement();
+			display_val = QString::fromStdString(tempQInt.to_hex());
+			ui->Screen->setText(display_val);
+			ui->BinScreen->setText(Normalize(tempQInt.to_string()));
+		}
+		else {
+			if (display_val[0] != '-')
+			{
+				display_val.prepend("-");
+				ui->Screen->setText(display_val);
+				ui->BinScreen->setText(Normalize(QInt(display_val.toStdString()).to_string()));
+			}
+			else {
+				display_val.remove(0,1);
+				ui->Screen->setText(display_val);
+				ui->BinScreen->setText(Normalize(QInt(display_val.toStdString()).to_string()));
+			}
+		}
+	}
 }
 
 void MainWindow::on_Bt_equals_clicked(){
@@ -370,19 +407,19 @@ void MainWindow::on_Bt_equals_clicked(){
                     EvalueStack.push_back(QString::fromStdString(res));
                 }
                 if(*iter == "Lsh"){
-                    res = (operand_1 << operand_2).to_string();
+					res = (operand_2 << operand_1).to_string();
                     EvalueStack.push_back(QString::fromStdString(res));
                 }
                 if(*iter == "Rsh"){
-                    res = (operand_1 >> operand_2).to_string();
+					res = (operand_2 >> operand_1).to_string();
                     EvalueStack.push_back(QString::fromStdString(res));
                 }
                 if(*iter == "RoR"){
-                    res = (operand_1.ror(operand_2)).to_string();
+					res = (operand_2.ror(operand_1)).to_string();
                     EvalueStack.push_back(QString::fromStdString(res));
                 }
                 if(*iter == "RoL"){
-                    res = (operand_1.rol(operand_2)).to_string();
+					res = (operand_2.rol(operand_1)).to_string();
                     EvalueStack.push_back(QString::fromStdString(res));
                 }
 				EvalueStack.pop();
