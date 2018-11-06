@@ -24,10 +24,6 @@ public:
     ~MainWindow();
 
 private slots:
-    //Track History
-    void TrackHistory();
-    //Keyboard events
-    //void keyPressEvent(QKeyEvent *event);
     //Characters
     void GroupDigitButtons();
     void GroupCharButtons();
@@ -45,14 +41,9 @@ private slots:
     void on_RadBt_dec_toggled(bool checked);
     void on_RadBt_bin_toggled(bool checked);
     void on_RadBt_hex_toggled(bool checked);
-    //logical math
-    void on_Bt_RoL_clicked();
-    void on_Bt_RoR_clicked();
     //functional button
-    void on_Bt_mod_clicked();
     void on_Bt_erase_clicked();
     void on_Bt_clear_clicked();
-
     void on_Bt_backspace_clicked();
 
     void EnableAtoF(bool enable);
@@ -61,17 +52,16 @@ private slots:
     bool isOperator(QString op);
     std::vector<QString> ConvertToPostfix();
     QString Normalize(std::string x);
-
 private:
     Ui::MainWindow *ui;
 	int i = 0;
 	int dot_count = 0;
     bool wasEqualClicked = false, wasOperatorClicked = false;
+    bool isBin = false, isDec = false, isHex = false;
     bool wasRadBin = false, wasRadDec = false, wasRadHex = false;
     QString display_val = "";
     QQueue<QString> __history;
     std::vector<QString> Exp;
-	//QString result ="";
     QString calculate();
 };
 
