@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);   
     setMinimumSize(420,520);
     setStyleSheet("QMainWindow{ background-color: #333333 }");
-    QWidget::setWindowTitle("MegaShotaCalculator");
+    QWidget::setWindowTitle("Calculator");
     GroupDigitButtons();
     GroupCharButtons();
     GroupMathButton();
@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     wasRadDec = true;
 	ui->History->setAlignment(Qt::AlignRight);
 	QInt loremIpsumVal("0");
-	ui->BinScreen->setText(Normalize(loremIpsumVal.to_string()));
+    ui->BinScreen->setText(Normalize(loremIpsumVal.to_string()));
 }
 
 QString MainWindow::Normalize(std::string x){
@@ -37,24 +37,11 @@ QString MainWindow::Normalize(std::string x){
 
     return QString::fromStdString(after);
 }
-void MainWindow::TrackHistory(){
-    QQueue<QString> tempQueue;
-
-    while (!__history.empty()) {
-        ui->History->append(__history.front());
-        tempQueue.enqueue(__history.dequeue());
-    }
-
-    while (!tempQueue.empty()) {
-        __history.enqueue(tempQueue.dequeue());
-    }
-}
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-//Keyboard events
 
 //Set-enable Buttons
 void MainWindow::EnableAtoF(bool enable){
@@ -80,9 +67,19 @@ void MainWindow::Enable2to9(bool enable){
 
 //Postfix Conversion
 int MainWindow::OperPriority(QString op){
+    if(op == "Not")
+        return 7;
     if(op == "x" || op == "÷")
+        return 6;
+    if(op == "+" || op == "-")
+        return 5;
+    if(op == "Lsh" || op == "Rsh" || op == "RoR" || op == "RoL")
+        return 4;
+    if(op == "Xor")
         return 3;
-	if(op == "+" || op == "-")
+    if(op == "And")
+        return 2;
+    if(op == "Or")
         return 1;
     return 0;
 }
@@ -153,10 +150,14 @@ void MainWindow::Bt_chars_clicked(){
 		wasEqualClicked = false;
 		i = 0;
 	}
+    ui->RadBt_bin->setEnabled(ui->RadBt_bin->isChecked());
+    ui->RadBt_dec->setEnabled(ui->RadBt_dec->isChecked());
+    ui->RadBt_hex->setEnabled(ui->RadBt_hex->isChecked());
     wasOperatorClicked = false;
     QPushButton *button = static_cast<QPushButton *>(sender());
     display_val = display_val + button->text();
     ui->Screen->setText(display_val);
+
 }
 
 void MainWindow::Bt_digits_clicked(){
@@ -166,6 +167,9 @@ void MainWindow::Bt_digits_clicked(){
 		wasEqualClicked = false;
 		i = 0;
 	}
+    ui->RadBt_bin->setEnabled(ui->RadBt_bin->isChecked());
+    ui->RadBt_dec->setEnabled(ui->RadBt_dec->isChecked());
+    ui->RadBt_hex->setEnabled(ui->RadBt_hex->isChecked());
     wasOperatorClicked = false;
 	QPushButton *button = static_cast<QPushButton *>(sender());
     if(display_val.toDouble() < DBL_EPSILON && display_val.length() < 2 && !ui->RadBt_bin->isChecked())
@@ -199,6 +203,10 @@ void MainWindow::resetMemory(){
     display_val = "";
     dot_count = i = 0;
 	wasEqualClicked = false;
+    ui->RadBt_bin->setEnabled(true);
+    ui->RadBt_dec->setEnabled(true);
+    ui->RadBt_hex->setEnabled(true);
+    ui->BinScreen->setText(Normalize(QInt("0").to_binary_string()));
 }
 
 //math operations
@@ -213,6 +221,8 @@ void MainWindow::GroupMathButton(){
     connect(ui->Bt_not, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
     connect(ui->Bt_lsh, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
     connect(ui->Bt_rsh, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
+    connect(ui->Bt_RoR, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
+    connect(ui->Bt_RoL, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
 }
 void MainWindow::Bt_math_operators_clicked(){
 	wasEqualClicked = false;
@@ -236,12 +246,63 @@ void MainWindow::Bt_math_operators_clicked(){
 }
 
 void MainWindow::on_Bt_plus_minus_clicked(){
-
+    if(display_val == "" || display_val == "0"){
+        return;
+    }
+    if(isBin){
+        QInt tempQInt(display_val.toStdString());
+        //tempQInt.to2ndComplement();
+        display_val = QString::fromStdString(tempQInt.to_string());
+    }
+    if(isHex){
+        QInt tempQInt(display_val.toStdString());
+        tempQInt = tempQInt.to_binary_string();
+        //tempQInt.to2ndComplement();
+        display_val = QString::fromStdString(tempQInt.to_string());
+    }
+    else{
+        if(display_val[0] != '-')
+        {
+            display_val.prepend("-");
+            ui->Screen->setText(display_val);
+        }
+        else
+            display_val.remove(0,1);
+            ui->Screen->setText(display_val);
+    }
 }
 
 void MainWindow::on_Bt_equals_clicked(){
-    bool isBin = false, isDec = false, isHex = false;
+    isBin = false; isDec = false; isHex = false;
     QInt tempVar;
+
+    wasEqualClicked = true;
+    wasOperatorClicked = false;
+    ui->RadBt_bin->setEnabled(true);
+    ui->RadBt_dec->setEnabled(true);
+    ui->RadBt_hex->setEnabled(true);
+
+    if (Exp.size() == 0 && display_val != "") {
+        isBin = ui->RadBt_bin->isChecked();
+        isDec = ui->RadBt_dec->isChecked();
+        isHex = ui->RadBt_hex->isChecked();
+        Exp.resize(0);
+        ui->History->append("_____________\n");
+        ui->History->append(display_val);
+        ui->Screen->setText(display_val);
+        if (isDec)
+            tempVar = QInt(display_val.toStdString());
+        if (isBin)
+            tempVar = QInt(BinStrToVectorBool(display_val.toStdString()));
+        if (isHex)
+            tempVar = QInt::HexToQint(display_val.toStdString());
+        ui->BinScreen->setText(this->Normalize(tempVar.to_string()));
+        Exp.emplace_back(display_val);
+        i = 1;
+        ui->History->append("\n------------------------------\n");
+        return;
+    }
+
     if(display_val == "" && Exp.empty())
         return;
     else{
@@ -280,7 +341,6 @@ void MainWindow::on_Bt_equals_clicked(){
                     operand_1 = QInt::HexToQint(EvalueStack.pop().toStdString());
                     operand_2 = QInt::HexToQint(EvalueStack.pop().toStdString());
                 }
-
                 if(*iter == "+"){
                     res = (operand_1 + operand_2).to_string();
                     EvalueStack.push_back(QString::fromStdString(res));
@@ -297,16 +357,42 @@ void MainWindow::on_Bt_equals_clicked(){
 					res = (operand_2 / operand_1).to_string();
                     EvalueStack.push_back(QString::fromStdString(res));
                 }
+                if(*iter == "And"){
+                    res = (operand_1 & operand_2).to_string();
+                    EvalueStack.push_back(QString::fromStdString(res));
+                }
+                if(*iter == "Or"){
+                    res = (operand_1 | operand_2).to_string();
+                    EvalueStack.push_back(QString::fromStdString(res));
+                }
+                if(*iter == "Xor"){
+                    res = (operand_1 ^ operand_2).to_string();
+                    EvalueStack.push_back(QString::fromStdString(res));
+                }
+                if(*iter == "Lsh"){
+                    res = (operand_1 << operand_2).to_string();
+                    EvalueStack.push_back(QString::fromStdString(res));
+                }
+                if(*iter == "Rsh"){
+                    res = (operand_1 >> operand_2).to_string();
+                    EvalueStack.push_back(QString::fromStdString(res));
+                }
+                if(*iter == "RoR"){
+                    res = (operand_1.ror(operand_2)).to_string();
+                    EvalueStack.push_back(QString::fromStdString(res));
+                }
+                if(*iter == "RoL"){
+                    res = (operand_1.rol(operand_2)).to_string();
+                    EvalueStack.push_back(QString::fromStdString(res));
+                }
 				EvalueStack.pop();
                 tempVar = QInt(res);
-                std::cout << res << std::endl;
                 if (isDec)
                     display_val = QString::fromStdString(res);
                 if (isBin)
                     display_val = QString::fromStdString(QInt(res).to_binary_string());
                 if (isHex)
                     display_val = QString::fromStdString(QInt(res).to_hex());
-                std::cout << display_val.toStdString() << std::endl;
                 EvalueStack.push(display_val);
             }
         }
@@ -316,10 +402,9 @@ void MainWindow::on_Bt_equals_clicked(){
     ui->History->append(display_val);
     ui->Screen->setText(display_val);
     ui->BinScreen->setText(this->Normalize(tempVar.to_string()));
+
 	Exp.emplace_back(display_val);
-	i = 1;
-	wasEqualClicked = true;
-    wasOperatorClicked = false;
+    i = 1;
 	ui->History->append("\n------------------------------\n");
 }
 
@@ -335,6 +420,8 @@ void MainWindow::on_Bt_percent(){
 void MainWindow::on_RadBt_dec_toggled(bool checked)
 {
     EnableAtoF(!checked);
+    ui->RadBt_bin->setEnabled(!checked);
+    ui->RadBt_hex->setEnabled(!checked);
     QInt tempQInt;
     if (wasRadBin)
         tempQInt = QInt(BinStrToVectorBool(display_val.toStdString()));
@@ -350,6 +437,9 @@ void MainWindow::on_RadBt_bin_toggled(bool checked)
 {
     EnableAtoF(!checked);
     Enable2to9(!checked);
+
+    ui->RadBt_dec->setEnabled(!checked);
+    ui->RadBt_hex->setEnabled(!checked);
     ui->Bt_dot->setEnabled(!checked);
     QInt tempQInt;
 
@@ -361,23 +451,16 @@ void MainWindow::on_RadBt_bin_toggled(bool checked)
 void MainWindow::on_RadBt_hex_toggled(bool checked)
 {
     EnableAtoF(checked);
+
+    ui->RadBt_bin->setEnabled(!checked);
+    ui->RadBt_dec->setEnabled(!checked);
     ui->Bt_dot->setEnabled(!checked);
     QInt tempQInt(display_val.toStdString());
     std::string hex = tempQInt.to_hex();
     ui->Screen->setText(QString::fromStdString(hex));
 }
 
-//logical math
-void MainWindow::on_Bt_RoL_clicked(){
-
-}
-void MainWindow::on_Bt_RoR_clicked(){
-
-}
-//functional button
-void MainWindow::on_Bt_mod_clicked(){
-
-}
+//functional buttons
 
 void MainWindow::on_Bt_erase_clicked(){
     resetMemory();
