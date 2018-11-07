@@ -33,6 +33,7 @@ HEADERS += \
         mainwindow.h \
     QInt.h
 
+
 FORMS += \
         mainwindow.ui
 # Default rules for deployment.
@@ -41,3 +42,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES +=
+
+DISTFILES += \
+    Neko.ico
+
+win32: RC_ICONS += Neko.ico

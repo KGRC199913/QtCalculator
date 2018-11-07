@@ -52,6 +52,8 @@ private slots:
     bool isOperator(QString op);
     std::vector<QString> ConvertToPostfix();
     QString Normalize(std::string x);
+    void on_Bt_not_clicked();
+
 private:
     Ui::MainWindow *ui;
 	int i = 0;
