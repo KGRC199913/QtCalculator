@@ -110,17 +110,25 @@ void HandleCommandlineArgs(std::ifstream & input, std::ofstream & output) {
 		}
 	}
 }
+
 int main(int argc, char *argv[])
 {
 	if (argc == 1) {
 		QApplication a(argc, argv);
+
 		MainWindow window;
-		window.show();
+        QIcon icon("./Neko.ico");
+        a.setWindowIcon(icon);
+        window.show();
 		return a.exec();
 	}
-	std::ifstream input(argv[1]);
-	std::ofstream output(argv[2]);
-	HandleCommandlineArgs(input, output);
 
-	return 0;
+    if (argc == 3) {
+        std::ifstream input(argv[1]);
+        std::ofstream output(argv[2]);
+        HandleCommandlineArgs(input, output);
+        return EXIT_SUCCESS;
+    }
+
+    return EXIT_FAILURE;
 }

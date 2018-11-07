@@ -4,7 +4,8 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     //setWindowFlags(Qt::Window | Qt::FramelessWindowHint |Qt::WindowCloseButtonHint);
-    ui->setupUi(this);   
+    ui->setupUi(this);
+
     setMinimumSize(420,520);
     setStyleSheet("QMainWindow{ background-color: #333333 }");
     QWidget::setWindowTitle("Calculator");
@@ -12,14 +13,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     GroupCharButtons();
     GroupMathButton();
     //TrackHistory();
-    on_RadBt_dec_toggled(true);
     wasRadDec = true;
-	ui->RadBt_bin->setEnabled(true);
-	ui->RadBt_dec->setEnabled(true);
-	ui->RadBt_hex->setEnabled(true);
 	ui->History->setAlignment(Qt::AlignRight);
 	QInt loremIpsumVal("0");
     ui->BinScreen->setText(Normalize(loremIpsumVal.to_string()));
+    ui->Bt_percent->setEnabled(false);
+    ui->Bt_mod->setEnabled(false);
+    ui->Bt_dot->setEnabled(false);
+    ui->RadBt_bin->setEnabled(true);
+    ui->RadBt_dec->setEnabled(true);
+    ui->RadBt_hex->setEnabled(true);
+    on_RadBt_dec_toggled(true);
 }
 
 QString MainWindow::Normalize(std::string x){
@@ -241,7 +245,6 @@ void MainWindow::GroupMathButton(){
     connect(ui->Bt_and, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
     connect(ui->Bt_or, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
     connect(ui->Bt_xor, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
-    connect(ui->Bt_not, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
     connect(ui->Bt_lsh, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
     connect(ui->Bt_rsh, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
     connect(ui->Bt_RoR, SIGNAL(clicked()),this, SLOT(Bt_math_operators_clicked()));
@@ -459,6 +462,7 @@ void MainWindow::on_RadBt_dec_toggled(bool checked)
     EnableAtoF(!checked);
     ui->RadBt_bin->setEnabled(!checked);
     ui->RadBt_hex->setEnabled(!checked);
+
     QInt tempQInt;
     if (wasRadBin)
         tempQInt = QInt(BinStrToVectorBool(display_val.toStdString()));
@@ -516,9 +520,42 @@ void MainWindow::on_Bt_clear_clicked(){
 void MainWindow::on_Bt_backspace_clicked(){
     if(display_val.length() == 0)
         return;
+
     if(display_val[display_val.length() - 1] == "."){
         dot_count = 0;
     }
-        display_val.remove(display_val.length()-1, 1);
+    display_val.remove(display_val.length()-1, 1);
+    ui->Screen->setText(display_val);
+}
+
+void MainWindow::on_Bt_not_clicked()
+{
+    if (display_val.length() == 0 || wasOperatorClicked)
+        return;
+    isBin = ui->RadBt_bin->isChecked();
+    isDec = ui->RadBt_dec->isChecked();
+    isHex = ui->RadBt_hex->isChecked();
+
+    if (isBin) {
+        QInt tempQInt(BinStrToVectorBool(display_val.toStdString()));
+        tempQInt = ~tempQInt;
+        display_val = QString::fromStdString(tempQInt.to_binary_string());
         ui->Screen->setText(display_val);
+        ui->BinScreen->setText(Normalize(tempQInt.to_string()));
+    } else {
+        if(isHex) {
+            QInt tempQInt = QInt::HexToQint(display_val.toStdString());
+            tempQInt = ~tempQInt;
+            display_val = QString::fromStdString(tempQInt.to_hex());
+            ui->Screen->setText(display_val);
+            ui->BinScreen->setText(Normalize(tempQInt.to_string()));
+        }
+        else {
+            QInt tempQInt(display_val.toStdString());
+            tempQInt = ~tempQInt;
+            display_val = QString::fromStdString(tempQInt.to_string());
+            ui->Screen->setText(display_val);
+            ui->BinScreen->setText(Normalize(tempQInt.to_string()));
+        }
+    }
 }

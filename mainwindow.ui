@@ -221,6 +221,9 @@ font-size:14pt;
     <property name="mouseTracking">
      <bool>false</bool>
     </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This feature is not implemented yet and not gonna be implemented in far future&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
     <property name="styleSheet">
      <string notr="true">QPushButton:hover{
 background-color:#838383;
@@ -236,6 +239,10 @@ border:1px solid white;
 border-radius: 5px;
 color:white;
 font-size:14pt;
+}
+
+QPushButton:disabled{
+background-color:#bfbfbf;
 }</string>
     </property>
     <property name="text">
@@ -553,6 +560,9 @@ font-size:10pt;
     <property name="mouseTracking">
      <bool>false</bool>
     </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Please don't click this for the love of the Emperor of Mankind&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
     <property name="styleSheet">
      <string notr="true">QPushButton:disabled{
 background-color:#bfbfbf;
@@ -758,6 +768,9 @@ font-size:10pt;
       <height>41</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Don't click this button&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
     <property name="styleSheet">
      <string notr="true">QPushButton:hover{
 background-color:#838383;
@@ -773,6 +786,9 @@ border:1px solid white;
 border-radius: 5px;
 color:white;
 font-size:10pt;
+}
+QPushButton:disabled{
+background-color:#bfbfbf;
 }</string>
     </property>
     <property name="text">
